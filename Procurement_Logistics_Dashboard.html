@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procurement & Logistics Dashboard</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#172033}
+:root{--navy:#102a43;--blue:#1976d2;--green:#18a673;--orange:#f59e0b;--red:#e05252;--muted:#718096;--line:#e7ebf2;--white:#fff}
+.app{display:flex;min-height:100vh}.sidebar{width:250px;background:var(--navy);color:#dce8f5;padding:22px 14px;position:fixed;inset:0 auto 0 0}
+.brand{font-size:18px;font-weight:800;padding:8px 12px 25px;line-height:1.35}.brand span{display:block;color:#7dd3fc;font-size:11px;letter-spacing:1.4px;margin-top:4px}
+.nav{margin-top:8px}.nav button{width:100%;border:0;background:none;color:#cbd8e7;text-align:left;padding:12px 13px;border-radius:9px;margin:2px 0;cursor:pointer;font-size:14px}.nav button:hover,.nav button.active{background:#1d4569;color:#fff}.nav .section{font-size:10px;color:#7f9bb6;font-weight:700;padding:18px 13px 7px;letter-spacing:1.1px}
+.main{margin-left:250px;width:calc(100% - 250px);padding:25px 30px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.title h1{margin:0;font-size:25px}.title p{margin:5px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;gap:9px}.btn{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:8px;cursor:pointer;font-weight:650;color:#334155}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn.success{background:var(--green);border-color:var(--green);color:#fff}.btn.small{padding:7px 10px;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:20px}.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;box-shadow:0 2px 7px rgba(16,42,67,.03)}.metric{display:flex;justify-content:space-between;align-items:flex-start}.metric .label{color:var(--muted);font-size:12px}.metric .value{font-size:27px;font-weight:800;margin-top:8px}.icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;background:#eef6ff}.green{background:#eafaf4}.orange{background:#fff7e7}.red{background:#fff0f0}.content{display:grid;grid-template-columns:2fr 1fr;gap:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.panel-head h3{margin:0;font-size:15px}.panel-head span{font-size:12px;color:var(--muted)}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:12px 15px;border-bottom:1px solid #eef1f5;font-size:12px}th{color:#7a8797;font-size:11px;text-transform:uppercase;letter-spacing:.4px;background:#fbfcfe}tr:last-child td{border-bottom:0}.status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:10px;font-weight:700}.s-blue{background:#e9f3ff;color:#1769aa}.s-yellow{background:#fff5d9;color:#9a6a00}.s-green{background:#e8f8f1;color:#087a50}.s-red{background:#ffeaea;color:#a22d2d}.side-list{padding:8px 18px 18px}.todo{display:flex;gap:10px;padding:13px 0;border-bottom:1px solid #eef1f5}.todo:last-child{border:0}.dot{width:8px;height:8px;border-radius:50%;margin-top:5px;background:var(--blue)}.todo b{font-size:12px}.todo small{display:block;color:var(--muted);margin-top:4px}.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding:0 18px 18px}.quick button{padding:12px;border:1px dashed #cfd8e3;background:#fafcff;border-radius:8px;text-align:left;cursor:pointer}.quick b{display:block;font-size:12px}.quick small{color:var(--muted)}.page{display:none}.page.active{display:block}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:18px}.field label{display:block;font-size:11px;color:#66758a;margin-bottom:6px;font-weight:700}.field input,.field select,.field textarea{width:100%;padding:10px;border:1px solid #dce3eb;border-radius:8px;font:inherit;font-size:13px}.field textarea{min-height:90px;resize:vertical}.full{grid-column:1/-1}.vendor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:18px}.vendor{border:1px solid var(--line);border-radius:10px;padding:15px}.vendor h4{margin:0 0 5px;font-size:14px}.vendor p{margin:3px 0;color:var(--muted);font-size:11px}.vendor .tag{display:inline-block;margin-top:8px;background:#edf7f3;color:#087a50;padding:4px 7px;border-radius:12px;font-size:10px}.empty{padding:40px;text-align:center;color:var(--muted)}.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:13px;width:min(650px,100%);max-height:90vh;overflow:auto}.modalhead{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.modalbody{padding:18px}.close{border:0;background:none;font-size:20px;cursor:pointer}.checklist{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.check{border:1px solid var(--line);padding:10px;border-radius:8px;font-size:12px}.check input{margin-right:7px}
+@media(max-width:900px){.sidebar{width:70px}.brand{font-size:0}.brand span{display:none}.nav button{font-size:0;text-align:center}.nav button:first-letter{font-size:18px}.main{margin-left:70px;width:calc(100% - 70px);padding:18px}.cards{grid-template-columns:repeat(2,1fr)}.content{grid-template-columns:1fr}.vendor-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
+.tabsbar{display:flex;gap:4px;padding:0 14px;border-bottom:1px solid var(--line);overflow-x:auto}.tb{border:0;background:none;padding:13px 14px;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;font-weight:650;white-space:nowrap}.tb.on{color:var(--blue);border-color:var(--blue)}.pad{padding:18px}.vr{display:flex;gap:10px;align-items:center;padding:11px 18px;border-bottom:1px solid #eef1f5;flex-wrap:wrap}.vr .i{flex:1;min-width:180px;font-size:13px}.vr small{color:var(--muted);display:block;font-size:11px}.inp{padding:7px;border:1px solid #dce3eb;border-radius:6px;font:inherit;font-size:12px;width:100%}.num{width:70px}.win{background:#fff7e7;border:1px solid #f59e0b;border-radius:10px;padding:14px;margin:18px}.win b{font-size:19px}.bar{height:8px;background:#e7ebf2;border-radius:4px;min-width:90px}.bar i{display:block;height:100%;background:var(--blue);border-radius:4px}tr.click{cursor:pointer}tr.click:hover{background:#f8fafd}.ok{color:var(--green);font-weight:700;font-size:12px}.btn.wa{background:#1f9d57;border-color:#1f9d57;color:#fff}.btn.del{color:var(--red);border-color:var(--red)}.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">PROCUREMENT<span>& LOGISTICS SYSTEM</span></div>
+  <div class="nav">
+    <div class="section">MAIN</div>
+    <button class="active" onclick="showPage('dashboard',this)">📊 Dashboard</button>
+    <button onclick="showPage('work',this)">📌 My Work</button>
+    <div class="section">PROCUREMENT</div>
+    <button onclick="showPage('tender',this)">📋 Tender</button>
+    <button onclick="showPage('vendor',this)">🏢 Vendor</button>
+    <button onclick="showPage('documents',this)">📄 Document Center</button>
+    <button onclick="showPage('whatsapp',this)">📱 WhatsApp</button>
+    <div class="section">LOGISTICS</div>
+    <button onclick="showPage('logistics',this)">🚚 Pengiriman</button>
+    <div class="section">REPORT</div>
+    <button onclick="showPage('report',this)">📈 Laporan</button>
+    <div class="section">MULTI-USER</div>
+    <button onclick="showPage('sync',this)">🔄 Sinkronisasi</button>
+  </div>
+</aside>
+
+<main class="main">
+<section id="dashboard" class="page active">
+  <div class="top"><div class="title"><h1>Dashboard Pengadaan</h1><p>Monitoring pekerjaan procurement & logistik rumah sakit</p></div>
+  <div class="actions"><button class="btn" onclick="openVendor()">+ Vendor</button><button class="btn primary" onclick="openTender()">+ Buat Tender</button></div></div>
+  <div class="cards">
+    <div class="card"><div class="metric"><div><div class="label">Tender Berjalan</div><div class="value" id="mTender">12</div></div><div class="icon">📋</div></div></div>
+    <div class="card"><div class="metric"><div><div class="label">Menunggu Penawaran</div><div class="value">5</div></div><div class="icon orange">⏳</div></div></div>
+    <div class="card"><div class="metric"><div><div class="label">Vendor Aktif</div><div class="value" id="mVendor">86</div></div><div class="icon green">🏢</div></div></div>
+    <div class="card"><div class="metric"><div><div class="label">Perlu Perhatian</div><div class="value">3</div></div><div class="icon red">⚠️</div></div></div>
+  </div>
+  <div class="content">
+    <div class="panel"><div class="panel-head"><h3>Tender Terbaru</h3><span>September 2026</span></div>
+      <table><thead><tr><th>No</th><th>Pengadaan</th><th>Deadline</th><th>Vendor</th><th>Status</th></tr></thead><tbody id="tenderRows"></tbody></table>
+    </div>
+    <div>
+      <div class="panel"><div class="panel-head"><h3>Prioritas Hari Ini</h3><span>24 Sep</span></div><div class="side-list">
+        <div class="todo"><div class="dot" style="background:#e05252"></div><div><b>Follow up vendor yang belum respon</b><small>3 vendor · Tender TDR-0098</small></div></div>
+        <div class="todo"><div class="dot" style="background:#f59e0b"></div><div><b>Evaluasi penawaran APD</b><small>Deadline hari ini</small></div></div>
+        <div class="todo"><div class="dot"></div><div><b>Buat PO Obat Generik</b><small>Menunggu penetapan vendor</small></div></div>
+      </div></div></div>
+  </div>
+  <div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Aksi Cepat</h3><span>Workflow utama</span></div>
+    <div class="quick">
+      <button onclick="openTender()"><b>📋 Buat Tender</b><small>Mulai proses pengadaan baru</small></button>
+      <button onclick="showPage('vendor',document.querySelectorAll('.nav button')[3])"><b>🏢 Kelola Vendor</b><small>Tambah & pilih vendor</small></button>
+      <button onclick="showPage('documents',document.querySelectorAll('.nav button')[4])"><b>📄 Generate Dokumen</b><small>Undangan / pemenang / tidak menang</small></button>
+      <button onclick="showPage('whatsapp',document.querySelectorAll('.nav button')[5])"><b>📱 WhatsApp</b><small>Kirim melalui Fonnte</small></button>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="page">
+<div class="top"><div class="title"><h1>My Work</h1><p>Tugas otomatis dari tender berjalan, plus catatan pribadi Anda</p></div></div>
+<div class="panel"><div class="panel-head"><h3>Perlu tindakan (otomatis)</h3><span>Dihitung dari data tender</span></div><div id="autoTasks"></div></div>
+<div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Catatan / to-do pribadi</h3></div><div class="pad" style="display:flex;gap:8px"><input id="newTask" class="inp" placeholder="Tulis pekerjaan baru..."><button class="btn primary" onclick="addTask()">+ Tambah</button></div><div id="manualTasks"></div></div>
+</section>
+
+<section id="tender" class="page">
+<div class="top"><div class="title"><h1>Tender</h1><p>Kelola seluruh proses tender</p></div><button class="btn primary" onclick="openTender()">+ Buat Tender</button></div>
+<div class="panel"><div class="panel-head"><h3>Daftar Tender</h3><span id="tenderCount">0 data</span></div><table><thead><tr><th>No Tender</th><th>Nama Pengadaan</th><th>Deadline</th><th>Vendor</th><th>Status</th></tr></thead><tbody id="allTenderRows"></tbody></table></div>
+</section>
+
+<section id="vendor" class="page">
+<div class="top"><div class="title"><h1>Database Vendor</h1><p>Master data perusahaan & PIC vendor</p></div><button class="btn primary" onclick="openVendor()">+ Tambah Vendor</button></div>
+<div class="panel"><div class="vendor-grid" id="vendorGrid"></div></div>
+</section>
+
+<section id="documents" class="page">
+<div class="top"><div class="title"><h1>Document Center</h1><p>Template dan dokumen otomatis berdasarkan data tender</p></div></div>
+<div class="panel"><table><thead><tr><th>Jenis Dokumen</th><th>Template</th><th>Keterangan</th><th>Aksi</th></tr></thead><tbody>
+<tr><td>📄 Undangan Tender</td><td>Template_Undangan.docx</td><td>Nama vendor, tender, deadline otomatis</td><td><button class="btn small" onclick="generateDoc('Undangan Tender')">Generate</button></td></tr>
+<tr><td>🏆 Surat Pemenang</td><td>Template_Pemenang.docx</td><td>Data pemenang otomatis</td><td><button class="btn small" onclick="generateDoc('Surat Pemenang')">Generate</button></td></tr>
+<tr><td>📩 Surat Tidak Menang</td><td>Template_Tidak_Menang.docx</td><td>Untuk peserta yang tidak terpilih</td><td><button class="btn small" onclick="generateDoc('Surat Tidak Menang')">Generate</button></td></tr>
+<tr><td>📝 Berita Acara</td><td>Template_BA.docx</td><td>Data tender & vendor otomatis</td><td><button class="btn small" onclick="generateDoc('Berita Acara')">Generate</button></td></tr>
+</tbody></table></div>
+</section>
+
+<section id="tdetail" class="page"><div class="top"><div class="title"><h1 id="tdTitle"></h1><p id="tdSub"></p></div><button class="btn" onclick="showPage('tender',document.querySelectorAll('.nav button')[2])">&larr; Kembali</button></div><div class="panel"><div class="tabsbar" id="tdTabs"></div><div id="tdBody"></div></div></section>
+
+<section id="whatsapp" class="page">
+<div class="top"><div class="title"><h1>WhatsApp Center</h1><p>Template pesan undangan dan riwayat pengiriman</p></div></div>
+<div class="cards"><div class="card"><div class="label">Total Pesan Dibuka</div><div class="value" id="waTotal">0</div></div><div class="card"><div class="label">Hari Ini</div><div class="value" id="waToday">0</div></div><div class="card"><div class="label">Metode</div><div class="value" style="font-size:18px">WhatsApp (wa.me)</div></div><div class="card"><div class="label">Kolom Otomatis</div><div style="font-size:11px;margin-top:8px;color:#66758a">{pic} {perusahaan} {tender} {no} {tanggal} {jam} {tempat} {deadline}</div></div></div>
+<div class="panel"><div class="panel-head"><h3>Template Pesan Undangan</h3><span>Salin isi template Word Anda ke sini</span></div><div class="pad"><textarea id="waTpl" class="inp" rows="12" oninput="tpl=this.value;save()"></textarea><p style="font-size:12px;color:#718096">Tombol kirim di tender membuka WhatsApp dengan pesan terisi; Anda tinggal menekan kirim dan melampirkan file undangan. Pengiriman otomatis penuh memerlukan API (mis. Fonnte) dan server.</p></div></div>
+<div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Riwayat Pengiriman</h3></div><div class="scroll"><table><thead><tr><th>Waktu</th><th>Tender</th><th>Vendor</th><th>Nomor</th></tr></thead><tbody id="waLog"></tbody></table></div></div>
+</section>
+
+<section id="logistics" class="page"><div class="top"><div class="title"><h1>Logistik</h1><p>Monitoring PO & pengiriman &mdash; muncul otomatis setelah pemenang tender ditetapkan</p></div></div><div class="panel"><div class="scroll"><table><thead><tr><th>No. PO / Surat</th><th>Pengadaan</th><th>Vendor Pemenang</th><th>Estimasi Tiba</th><th>Catatan</th><th>Status</th></tr></thead><tbody id="logRows"></tbody></table></div></div></section>
+
+<section id="report" class="page"><div class="top"><div class="title"><h1>Laporan</h1><p>Ringkasan otomatis dari data tender, vendor & logistik</p></div><button class="btn" onclick="exportReportCSV()">Unduh CSV</button></div>
+<div class="cards" id="repCards"></div>
+<div class="content">
+<div class="panel"><div class="panel-head"><h3>Tender per Status</h3></div><div id="repStatus" class="pad"></div></div>
+<div><div class="panel"><div class="panel-head"><h3>Vendor Paling Sering Menang</h3></div><div id="repWinners" class="pad"></div></div></div>
+</div></section>
+
+<section id="sync" class="page"><div class="top"><div class="title"><h1>Sinkronisasi Multi-User</h1><p>Bagikan data vendor & tender dengan tim lewat Google Sheets</p></div></div>
+<div class="panel"><div class="panel-head"><h3>Status Akun Google</h3></div><div class="pad" id="syncStatus"></div></div>
+<div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Panduan Sekali Setup (oleh admin/IT)</h3></div><div class="pad" style="font-size:13px;line-height:1.8">
+<ol style="margin:0;padding-left:20px">
+<li>Buka <b>Google Cloud Console</b> &rarr; buat project baru &rarr; aktifkan <b>Google Sheets API</b>.</li>
+<li>Buat <b>OAuth Client ID</b> tipe "Web application". Di "Authorized JavaScript origins", isi alamat tempat file dashboard ini di-hosting (harus https://, bukan file lokal &mdash; bisa pakai GitHub Pages, Netlify, atau link publish Claude).</li>
+<li>Salin Client ID yang dihasilkan, lalu tempel di kode dashboard pada baris <code>GOOGLE_CLIENT_ID</code> (cari di bagian atas script), lalu simpan ulang filenya.</li>
+<li>Pastikan spreadsheet Pakta Integritas dibagikan (Share) dengan akun Google setiap anggota tim sebagai Editor.</li>
+<li>Setiap anggota tim membuka dashboard ini dari alamat hosting yang sama, lalu klik "Hubungkan Akun Google" di bawah dan login dengan akun masing-masing.</li>
+</ol>
+<p style="color:#a22d2d;margin-top:10px">Catatan: tombol di bawah belum berfungsi sebelum GOOGLE_CLIENT_ID diisi dan file dibuka dari alamat https (bukan dibuka langsung sebagai file di komputer).</p>
+</div></div>
+<div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Sinkronisasi Data</h3><span id="syncLast"></span></div><div class="pad" style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn primary" onclick="connectGoogle()">Hubungkan Akun Google</button>
+<button class="btn success" onclick="pushToSheets()">Kirim data saya ke Sheets</button>
+<button class="btn" onclick="pullFromSheets()">Tarik data terbaru dari Sheets</button>
+</div><p class="pad" style="font-size:12px;color:#718096;margin:0">File dokumen (PDF/gambar) yang diunggah TIDAK ikut disinkronkan (hanya link-nya bila diisi), karena ukurannya tidak cocok untuk Google Sheets.</p></div>
+</section>
+</main>
+</div>
+
+<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><b id="modalTitle">Form</b><button class="close" onclick="closeModal()">×</button></div><div class="modalbody" id="modalBody"></div></div></div>
+
+<script>
+const defaultVendors=[
+ {company:'PT Sehat Farma',pic:'Budi Santoso',wa:'081234567890',cat:'Farmasi'},
+ {company:'PT Medika Jaya',pic:'Andi Wijaya',wa:'081298765432',cat:'Alkes'},
+ {company:'PT Sumber Medis',pic:'Rina Putri',wa:'081377788899',cat:'Farmasi'},
+ {company:'PT Mitra Medika',pic:'Dedi Kurniawan',wa:'081355566677',cat:'Umum'},
+ {company:'PT Anugerah Farma',pic:'Sari Dewi',wa:'081322211100',cat:'Farmasi'},
+ {company:'PT Prima Alkes',pic:'Fajar Hadi',wa:'081311122233',cat:'Alkes'}
+];
+let vendors=JSON.parse(localStorage.getItem('proc_vendors')||'null')||defaultVendors;
+const PAKTA_IMPORT=[{"company": "PT. Bintang Permata Sejati", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "2/4/2026", "link": "https://docs.google.com/open?id=12SrnlBQdgwyLlXgo5m2aBDrfBKqgLKZk_SzoZC5fNCs"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "Koperasi Konsumen Warga Semen Gresik", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "2/4/2026", "link": "https://docs.google.com/open?id=11OKKZf6POjlUjkJImv0LZgFBZUpI0JTzD8IaTHhfszQ"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT. Karsa Perdana Mulia", "pic": "Rachmawati Rizkah Dewi", "jabatan": "Direktur", "alamat": "Jl. Ais Nasution Grand Kartini Kav. 19, Gresik", "pakta": {"tanggal": "9/18/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT Melati Muncul Jaya", "pic": "Nurhayati Winahyu", "jabatan": "Direktur Utama", "alamat": "Jl. R.A. Kartini 138, Gresik", "pakta": {"tanggal": "9/18/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "CV. Batu Mas", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "4/14/2026", "link": "https://docs.google.com/open?id=1Z_HzxeOwvACldoCd9aJdg6sUrDu-dgwtWIcKzg1x870"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT. Asa Jaya Santosa", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "4/17/2026", "link": "https://docs.google.com/open?id=1VN1avY7C-vS4VRPMRSPd9AQqYudoZuxKJI0Fx3rymm4"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "CV. Adiatma Putra", "pic": "Ferry Rosyana", "jabatan": "Direktur", "alamat": "Jl. Raya Mulung - Merakurak, Kab. Tuban", "pakta": {"tanggal": "9/18/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "Madani Interior", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "4/24/2026", "link": "https://docs.google.com/open?id=11y3S-s90cNd6jmVwUEg5apTG94--5Dj7UvN_OgXbREI"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT Sucofindo (Persero) Cabang Surabaya", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "8/20/2026", "link": "https://docs.google.com/open?id=1Se20z5b28soWZBXI6YTgqF5qZHSggZi5dN0SptDq9Uo"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT. Kimia Farma Trading & Distribution Cabang Sidoarjo", "pic": "", "jabatan": "", "alamat": "", "pakta": {"tanggal": "8/20/2026", "link": "https://docs.google.com/open?id=10Afpq7YfURBmd7rWJ1gc7gcf3Gc4WjcAH5X7pPdjtFA"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT. BTL Indonesia", "pic": "Rossa", "jabatan": "Sales Marketing", "alamat": "Ruko Mega Galaxy 14C no. 3", "pakta": {"tanggal": "9/9/2026", "link": "https://docs.google.com/open?id=1fGlANItrZJm00LOMlZPykMYS3WhnfNVVii1uTl-7b1M"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT. Polaris Alkes Starindo", "pic": "Nanda Fahrizal Wahyudianto", "jabatan": "Marketing & Sales Executive", "alamat": "Jl. Gn. Sahari No.12G 1, Gn. Sahari Utara, Sawah Besar, Jakarta Pusat", "pakta": {"tanggal": "9/9/2026", "link": "https://docs.google.com/open?id=1jaEsPop6kmpvxAdVOyQ2wPcaoR5SMoiHzRQe2cPHHBg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT Samudera Bina Medical", "pic": "Dyah Ayu Widyaning Lestari", "jabatan": "Direktur", "alamat": "Jl. Ketintang Selatan No 51, Surabaya", "pakta": {"tanggal": "9/9/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "PT Murti Indah Sentosa", "pic": "Eko Budi Santoso", "jabatan": "Kepala Perwakilan", "alamat": "Jl. Sultan Iskandar Muda Kav. 29, Kebayoran Lama, Jakarta", "pakta": {"tanggal": "9/10/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "CV. Karya Angkasa Teknik", "pic": "Nico Ardhito Irawan", "jabatan": "Direktur", "alamat": "Bunder Residence No.16, Kab. Gresik", "pakta": {"tanggal": "9/18/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}, {"company": "CV Laras Prima Cipta", "pic": "Moh Abdullah Ali", "jabatan": "Direktur", "alamat": "Dsn Pakuncen Ds Ngawen, Sidayu, Gresik", "pakta": {"tanggal": "9/18/2026", "link": "https://docs.google.com/open?id=1lkoKyCftGLjgjCTNqy-3iue_Lh5iNEpcvtzV7eKU5rg"}, "wa": "", "cat": "Belum dikategorikan"}];
+(function(){if(!localStorage.getItem('proc_pakta_import_v1')){const norm=n=>n.toLowerCase().replace(/^(pt|cv)\.?\s+/,'').replace(/[.,]/g,'').replace(/\s+/g,' ').trim();PAKTA_IMPORT.forEach(iv=>{const ex=vendors.find(v=>norm(v.company)===norm(iv.company));if(ex){ex.pakta=iv.pakta;ex.pic=ex.pic&&ex.pic!=='-'?ex.pic:iv.pic;ex.jabatan=ex.jabatan||iv.jabatan;ex.alamat=ex.alamat||iv.alamat}else{vendors.push(Object.assign({},iv))}});localStorage.setItem('proc_pakta_import_v1','1')}})();
+let tenders=JSON.parse(localStorage.getItem('proc_tenders')||'null')||[
+ {no:'TDR-2026-0098',name:'Pengadaan Obat Generik',deadline:'28 Sep 2026',vendor:8,status:'Penawaran'},
+ {no:'TDR-2026-0097',name:'Pengadaan APD',deadline:'29 Sep 2026',vendor:5,status:'Evaluasi'},
+ {no:'TDR-2026-0096',name:'Pengadaan ATK',deadline:'30 Sep 2026',vendor:6,status:'Undangan'},
+ {no:'TDR-2026-0095',name:'Pengadaan Alkes',deadline:'02 Okt 2026',vendor:10,status:'Berjalan'}
+];
+function save(){localStorage.setItem('proc_vendors',JSON.stringify(vendors));localStorage.setItem('proc_tenders',JSON.stringify(tenders));localStorage.setItem('proc_tpl',tpl);localStorage.setItem('proc_wlog',JSON.stringify(wlog));localStorage.setItem('proc_tasks',JSON.stringify(tasks))}
+function showPage(id,el){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(el)el.classList.add('active');if(id==='vendor')renderVendors();if(id==='tender')renderTenders();if(id==='whatsapp')renderWA();if(id==='work')renderWork();if(id==='logistics')renderLogistics();if(id==='report')renderReport();if(id==='sync')renderSync()}
+function statusClass(s){return s==='Selesai'||s==='Diterima'?'s-green':s==='Penawaran'||s==='Berjalan'?'s-blue':s==='Evaluasi'||s==='Undangan'?'s-yellow':'s-red'}
+function renderTenders(){
+ const row=(t,i,b)=>`<tr class="click" onclick="openDetail(${i})"><td>${b?'<b>'+t.no+'</b>':t.no}</td><td>${b?t.name:'<b>'+t.name+'</b>'}</td><td>${t.deadline}</td><td>${cnt(t)}</td><td><span class="status ${statusClass(t.status)}">${t.status}</span></td></tr>`;
+ document.getElementById('tenderRows').innerHTML=tenders.slice(0,6).map((t,i)=>row(t,i,0)).join('');
+ document.getElementById('allTenderRows').innerHTML=tenders.map((t,i)=>row(t,i,1)).join('');
+ document.getElementById('tenderCount').textContent=tenders.length+' data';document.getElementById('mTender').textContent=tenders.length;
+}
+function renderVendors(){document.getElementById('vendorGrid').innerHTML=vendors.map((v,i)=>{const wa=v.wa&&v.wa!=='-'?v.wa:'';const pakta=v.pakta?`<span class="tag" style="background:#e8f8f1;color:#087a50">Pakta ${v.pakta.tanggal?'· '+v.pakta.tanggal:''} <a href="${v.pakta.link}" target="_blank" style="color:#087a50">lihat</a></span>`:'';const nowa=wa?'':'<span class="tag" style="background:#fff0f0;color:#a22d2d">Belum ada WA</span>';return `<div class="vendor"><h4>${v.company}</h4>${v.pic?`<p>\ud83d\udc64 ${v.pic}${v.jabatan?' &middot; '+v.jabatan:''}</p>`:''}<p>\ud83d\udcf1 ${wa||'-'}</p><p>\ud83c\udff7\ufe0f ${v.cat||'-'}</p>${v.alamat?`<p style="font-size:10px">\ud83d\udccd ${v.alamat}</p>`:''}<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span class="tag">Aktif</span>${pakta}${nowa}</div><div style="margin-top:10px"><button class="btn small" onclick="editVendor(${i})">Edit</button> <button class="btn small del" onclick="delVendorAt(${i})">Hapus</button></div></div>`}).join('');document.getElementById('mVendor').textContent=vendors.length}
+function editVendor(i){const v=vendors[i];document.getElementById('modalTitle').textContent='Edit Vendor';document.getElementById('modalBody').innerHTML=`<div class="form-grid"><div class="field"><label>NAMA PERUSAHAAN</label><input id="vCompany" value="${(v.company||'').replace(/"/g,'&quot;')}"></div><div class="field"><label>NAMA PIC</label><input id="vPic" value="${(v.pic||'').replace(/"/g,'&quot;')}"></div><div class="field"><label>JABATAN PIC</label><input id="vJabatan" value="${(v.jabatan||'').replace(/"/g,'&quot;')}"></div><div class="field"><label>NOMOR WHATSAPP</label><input id="vWa" placeholder="628..." value="${(v.wa||'').replace(/"/g,'&quot;')}"></div><div class="field"><label>KATEGORI</label><select id="vCat">${['Farmasi','Alkes','Umum','ATK','Belum dikategorikan'].map(c=>`<option ${c===v.cat?'selected':''}>${c}</option>`).join('')}</select></div><div class="field full"><label>ALAMAT</label><input id="vAlamat" value="${(v.alamat||'').replace(/"/g,'&quot;')}"></div><div class="full"><button class="btn primary" onclick="saveVendor(${i})">Simpan Perubahan</button></div></div>`;document.getElementById('modal').classList.add('show')}
+function saveVendor(i){let company=vCompany.value.trim();if(!company){showAlert('Nama perusahaan wajib diisi');return}Object.assign(vendors[i],{company,pic:vPic.value||'',jabatan:vJabatan.value||'',wa:vWa.value||'',cat:vCat.value,alamat:vAlamat.value||''});save();closeModal();renderVendors()}
+function delVendorAt(i){askConfirm('Hapus vendor ini?',function(){const n=vendors[i].company;vendors.splice(i,1);tenders.forEach(t=>t.peserta=t.peserta.filter(x=>x!==n));save();renderVendors();renderTenders()})}
+function openVendor(){document.getElementById('modalTitle').textContent='Tambah Vendor';document.getElementById('modalBody').innerHTML=`<div class="form-grid"><div class="field"><label>NAMA PERUSAHAAN</label><input id="vCompany"></div><div class="field"><label>NAMA PIC</label><input id="vPic"></div><div class="field"><label>NOMOR WHATSAPP</label><input id="vWa" placeholder="628..."></div><div class="field"><label>KATEGORI</label><select id="vCat"><option>Farmasi</option><option>Alkes</option><option>Umum</option><option>ATK</option></select></div><div class="full"><button class="btn primary" onclick="addVendor()">Simpan Vendor</button></div></div>`;document.getElementById('modal').classList.add('show')}
+function addVendor(){let company=vCompany.value.trim();if(!company){showAlert('Nama perusahaan wajib diisi');return}vendors.push({company,pic:vPic.value||'-',wa:vWa.value||'-',cat:vCat.value});save();closeModal();renderVendors();showAlert('Vendor berhasil ditambahkan.')}
+function openTender(){document.getElementById('modalTitle').textContent='Buat Tender Baru';document.getElementById('modalBody').innerHTML=`<div class="form-grid"><div class="field"><label>NOMOR TENDER</label><input id="tNo" value="TDR-2026-${String(99+tenders.length).padStart(3,'0')}"></div><div class="field"><label>DEADLINE</label><input id="tDeadline" type="date"></div><div class="field full"><label>NAMA PENGADAAN</label><input id="tName" placeholder="Contoh: Pengadaan Obat Generik"></div><div class="field full"><label>PILIH VENDOR</label><div class="checklist">${vendors.map((v,i)=>`<label class="check"><input type="checkbox" name="vendorPick" value="${i}"> ${v.company}</label>`).join('')}</div></div><div class="field"><label>TANGGAL PRESENTASI</label><input id="tTgl" type="date"></div><div class="field"><label>JAM</label><input id="tJam" type="time"></div><div class="field full"><label>TEMPAT</label><input id="tTempat" placeholder="Ruang rapat lt. 2"></div><div class="full"><button class="btn primary" onclick="addTender()">Simpan & Buka Tender</button></div></div>`;document.getElementById('modal').classList.add('show')}
+function addTender(){let name=tName.value.trim();if(!name){showAlert('Nama pengadaan wajib diisi');return}let picks=[...document.querySelectorAll('input[name="vendorPick"]:checked')].map(x=>vendors[x.value].company);let d=tDeadline.value?new Date(tDeadline.value).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'-';tenders.unshift(normT({no:tNo.value,name,deadline:d,vendor:picks.length,status:'Undangan',peserta:picks,tgl:tTgl.value,jam:tJam.value,tempat:tTempat.value}));save();closeModal();renderTenders();openDetail(0)}
+function generateDoc(type){showAlert(`Demo: ${type} akan dibuat otomatis dari template Word/PDF berdasarkan data tender dan vendor. Pada tahap integrasi, tombol ini akan menghasilkan file per vendor.`)}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+const CRIT=[['Kualitas & kesesuaian produk',30],['Harga penawaran',25],['Spesifikasi teknis',20],['Garansi & purna jual',10],['Demo / presentasi',10],['Izin edar & legalitas',5]];
+const DEF_TPL=`Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nDengan hormat, kami mengundang perusahaan Bapak/Ibu mengikuti tender *{tender}* (No. {no}).\n\nPresentasi produk:\nTanggal: {tanggal}\nJam: {jam}\nTempat: {tempat}\nBatas penawaran: {deadline}\n\nMohon konfirmasi kehadiran melalui pesan ini.\n\nTerima kasih.\nBagian Pengadaan & Logistik`;
+let tpl=localStorage.getItem('proc_tpl')||DEF_TPL,wlog=JSON.parse(localStorage.getItem('proc_wlog')||'[]'),curT=0,curTab='info';
+let tasks=JSON.parse(localStorage.getItem('proc_tasks')||'[]');
+function uid(){return 'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function showAlert(msg){const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;top:22px;transform:translateX(-50%);background:#1f2937;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;z-index:99999;max-width:90%;box-shadow:0 4px 14px rgba(0,0,0,.25)';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}
+function askConfirm(msg,cb){const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:99999';ov.innerHTML='<div style="background:#fff;border-radius:10px;padding:20px;max-width:360px;width:90%;box-shadow:0 10px 30px rgba(0,0,0,.2)"><p style="font-size:13px;line-height:1.6;margin:0 0 16px;color:#1f2937">'+esc(msg)+'</p><div style="display:flex;gap:8px;justify-content:flex-end"><button id="cfCancel" class="btn">Batal</button><button id="cfOk" class="btn del">Ya</button></div></div>';document.body.appendChild(ov);ov.querySelector('#cfCancel').onclick=function(){ov.remove()};ov.querySelector('#cfOk').onclick=function(){ov.remove();cb()}}
+
+function normT(t){t.peserta=t.peserta||[];t.sent=t.sent||{};t.sc=t.sc||{};t.crit=t.crit||CRIT.map(c=>({n:c[0],w:c[1]}));(function(){let mig=false;t.crit.forEach((c,ci)=>{if(!c.id){c.id=uid();c._oi=ci;mig=true}});if(mig){Object.keys(t.sc||{}).forEach(vn=>{const old=t.sc[vn]||{};const nw={};t.crit.forEach(c=>{if(c._oi!=null&&old[c._oi]!=null)nw[c.id]=old[c._oi]});t.sc[vn]=nw});t.crit.forEach(c=>delete c._oi)}})();t.tgl=t.tgl||'';t.jam=t.jam||'';t.tempat=t.tempat||'';t.nomorSurat=t.nomorSurat||'';t.tglSurat=t.tglSurat||'';t.docs=t.docs||{};t.perihal=t.perihal||'UNDANGAN';t.acara=t.acara||'Anwijzing & Survey';t.kota=t.kota||'Gresik';t.signerName=t.signerName!=null?t.signerName:'Apt. Meinita S. Damayanti, S. Farm';t.signerJabatan=t.signerJabatan!=null?t.signerJabatan:'Manajer';t.companyName=t.companyName||'PT Cipta Nirmala';return t}
+tenders.forEach(normT);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cnt=t=>t.peserta.length||t.vendor;
+const vend=n=>vendors.find(v=>v.company===n)||{company:n,pic:'-',wa:'-'};
+function phone(h){let d=String(h).replace(/\D/g,'');if(d.startsWith('0'))d='62'+d.slice(1);return d}
+function msg(t,v){const m={pic:v.pic,perusahaan:v.company,tender:t.name,no:t.no,tanggal:t.tgl?new Date(t.tgl).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-',jam:t.jam||'-',tempat:t.tempat||'-',deadline:t.deadline};return tpl.replace(/\{(\w+)\}/g,(a,k)=>m[k]!=null?m[k]:a)}
+function openDetail(i){curT=i;curTab='info';showPage('tdetail',document.querySelectorAll('.nav button')[2]);renderDetail()}
+function setTab(x){curTab=x;renderDetail()}
+function renderDetail(){const t=tenders[curT];tdTitle.textContent=t.name;tdSub.textContent=t.no+' · Deadline '+t.deadline;
+ tdTabs.innerHTML=[['info','Detail'],['undangan','Vendor & Undangan'],['penawaran','Penawaran Vendor'],['nilai','Penilaian'],['hasil','Hasil']].map(x=>`<button class="tb ${curTab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
+ tdBody.innerHTML=curTab==='info'?tInfo(t):curTab==='undangan'?tInv(t):curTab==='penawaran'?tOffer(t):curTab==='nilai'?tScore(t):tRes(t)}
+function tInfo(t){const f=(l,k,ty,full)=>`<div class="field ${full?'full':''}"><label>${l}</label><input type="${ty||'text'}" value="${esc(t[k])}" oninput="tenders[curT].${k}=this.value;save()"></div>`;
+ return `<div class="form-grid">${f('NAMA PENGADAAN / PEKERJAAN','name','',1)}${f('NOMOR TENDER (INTERNAL)','no')}${f('DEADLINE (TEKS)','deadline')}${f('TANGGAL PRESENTASI/ANWIJZING','tgl','date')}${f('JAM','jam','time')}${f('TEMPAT ACARA','tempat','',1)}<div class="field"><label>STATUS</label><select onchange="tenders[curT].status=this.value;save();renderTenders()">${['Undangan','Penawaran','Evaluasi','Berjalan','Selesai'].map(x=>`<option ${x===t.status?'selected':''}>${x}</option>`).join('')}</select></div><div class="field" style="align-self:end"><button class="btn del" onclick="delTender()">Hapus tender</button></div></div>
+ <div class="panel-head" style="border-top:1px solid var(--line);margin-top:4px"><h3>Data Surat Undangan Anwijzing</h3><span>Untuk generate file .doc per vendor</span></div>
+ <div class="form-grid">${f('NOMOR SURAT','nomorSurat','',1)}${f('TANGGAL SURAT','tglSurat','date')}${f('PERIHAL','perihal')}${f('ACARA','acara')}${f('KOTA (KOP TANGGAL SURAT)','kota')}${f('NAMA PERUSAHAAN (PENGUNDANG)','companyName')}${f('NAMA PENANDATANGAN','signerName')}${f('JABATAN PENANDATANGAN','signerJabatan')}</div>`}
+function delTender(){askConfirm('Hapus tender ini?',function(){tenders.splice(curT,1);save();renderTenders();showPage('tender',document.querySelectorAll('.nav button')[2])})}
+function tInv(t){if(!vendors.length)return '<div class="empty">Belum ada vendor. Tambahkan di menu Vendor.</div>';
+ return `<div class="panel-head"><h3>Pilih vendor peserta</h3><span>${t.peserta.length} dipilih</span></div>`+vendors.map((v,i)=>{const on=t.peserta.includes(v.company);return `<div class="vr"><input type="checkbox" ${on?'checked':''} onchange="togglePeserta(${i})" aria-label="Pilih ${esc(v.company)}"><div class="i"><b>${esc(v.company)}</b><small>${esc(v.pic)} · ${esc(v.wa)}</small></div>${on?(t.sent[v.company]?`<span class="ok">Terkirim ${esc(t.sent[v.company])}</span>`:'')+`<button class="btn small" onclick="dlSurat(${i})">Surat Undangan (.doc)</button><button class="btn small wa" onclick="sendWA(${i})">${t.sent[v.company]?'Kirim ulang':'Kirim WhatsApp'}</button>`:''}</div>`}).join('')+`<div class="pad"><small style="color:#718096">"Surat Undangan (.doc)" mengikuti format template Anwijzing Anda dan otomatis terisi nomor surat, tanggal, acara, dan nama vendor. Pesan WhatsApp singkat diatur di menu WhatsApp.</small></div>`}
+function togglePeserta(i){const t=tenders[curT],n=vendors[i].company,k=t.peserta.indexOf(n);k<0?t.peserta.push(n):t.peserta.splice(k,1);save();renderDetail();renderTenders()}
+function sendWA(i){const t=tenders[curT],v=vendors[i],ph=phone(v.wa);if(ph.length<9){showAlert('Nomor WhatsApp vendor belum valid.');return}
+ window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(msg(t,v)),'_blank');const at=new Date().toLocaleString('id-ID');t.sent[v.company]=at;wlog.unshift({no:t.no,v:v.company,wa:v.wa,at});save();renderDetail()}
+const HARI_ID=['Minggu','Senin','Selasa','Rabu','Kamis',"Jum'at",'Sabtu'];
+const BULAN_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function tglIndo(iso){if(!iso)return '-';const d=new Date(iso+'T00:00:00');return HARI_ID[d.getDay()]+', '+d.getDate()+' '+BULAN_ID[d.getMonth()]+' '+d.getFullYear()}
+function suratHTML(t,v){const hariTgl=tglIndo(t.tgl);const tglSurat=t.tglSurat?tglIndo(t.tglSurat).split(', ')[1]:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+ const p=x=>`<p style="margin:0 0 6px">${x}</p>`;
+ return `<html><head><meta charset="utf-8"></head><body style="font-family:'Times New Roman';font-size:12pt;line-height:1.5">
+${p('Nomor : '+esc(t.nomorSurat||'-'))}
+${p('Perihal : '+esc(t.perihal))}
+${p('&nbsp;')}
+${p(esc(t.kota)+', '+tglSurat)}
+${p('&nbsp;')}
+${p('Kepada Yth,')}
+${p('<b>'+esc(v.company)+'</b>')}
+${p('di')}
+${p('Tempat')}
+${p('&nbsp;')}
+${p('Dengan hormat,')}
+${p('&nbsp;')}
+${p('Sehubungan dengan kebutuhan '+esc(t.name)+' di Rumah Sakit Semen Gresik, dengan ini kami mengundang saudara pada :')}
+${p('&nbsp;')}
+${p('Hari/ tanggal : '+esc(hariTgl))}
+${p('Jam : '+esc(t.jam||'-')+' WIB')}
+${p('Tempat : '+esc(t.tempat||'-'))}
+${p('Acara : '+esc(t.acara))}
+${p('&nbsp;')}
+${p('Demikian, atas perhatiannya disampaikan terima kasih.')}
+${p('&nbsp;')}
+${p(esc(t.companyName))}
+${p('&nbsp;')}
+${p('Hormat kami,')}
+${p('&nbsp;')}
+${p('<b><u>'+esc(t.signerName)+'</u></b>')}
+${p(esc(t.signerJabatan))}
+${p('&nbsp;')}
+${p('Catatan : - Harap konfirmasi kedatangan ke contact person di bawah ini.')}
+</body></html>`}
+function dlSurat(i){const t=tenders[curT],v=vendors[i];const h=suratHTML(t,v);
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff',h],{type:'application/msword'}));a.download='Undangan_Anwijzing_'+v.company.replace(/\W+/g,'_')+'.doc';a.click()}
+function attrSafe(s){return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+let openPrev=new Set();
+function isPdf(f){return f.type==='application/pdf'||/\.pdf$/i.test(f.name)||(f.data||'').indexOf('data:application/pdf')===0}
+function isImg(f){return /^image\//.test(f.type||'')||/\.(png|jpe?g|gif|webp)$/i.test(f.name)}
+function togglePrev(name,idx){const k=name+'|'+idx;if(openPrev.has(k))openPrev.delete(k);else openPrev.add(k);renderDetail()}
+function tOffer(t){if(!t.peserta.length)return '<div class="empty">Pilih vendor peserta di tab Vendor & Undangan dulu.</div>';
+ return t.peserta.map(name=>{const docs=(t.docs[name])||{files:[],link:''};const has=docs.files.length||docs.link;
+ const filesHtml=docs.files.map((f,idx)=>{const k=name+'|'+idx;const open=openPrev.has(k);const previewable=isPdf(f)||isImg(f);
+ const prevBlock=open?(isPdf(f)?`<iframe src="${f.data}" style="width:100%;height:440px;border:1px solid var(--line);border-radius:6px;margin-top:8px"></iframe>`:isImg(f)?`<img src="${f.data}" style="max-width:100%;border-radius:6px;margin-top:8px">`:`<p style="font-size:12px;color:#718096;margin-top:8px">Pratinjau tidak didukung untuk jenis file ini &mdash; silakan unduh untuk membukanya.</p>`):'';
+ return `<div class="vr" style="flex-wrap:wrap"><div class="i"><b>${esc(f.name)}</b><small>${(f.size/1024).toFixed(0)} KB \u00b7 diunggah ${esc(f.date)}</small></div>${previewable?`<button class="btn small" onclick="togglePrev('${attrSafe(name)}',${idx})">${open?'Tutup':'Preview'}</button>`:''}<button class="btn small" onclick="downloadDoc('${attrSafe(name)}',${idx})">Unduh</button><button class="btn small del" onclick="removeDoc('${attrSafe(name)}',${idx})">Hapus</button>${prevBlock?`<div style="width:100%">${prevBlock}</div>`:''}</div>`}).join('');
+ return `<div class="panel-head"><h3>${esc(name)}</h3><span>${has?'<span class="ok">Ada dokumen</span>':'<span style="color:#a22d2d">Belum ada dokumen</span>'}</span></div>${filesHtml}
+ <div class="pad"><label style="font-size:12px;color:#718096;display:block;margin-bottom:4px">Unggah penawaran harga / brosur (PDF, JPG, PNG, Word, Excel \u2014 maks 4MB)</label><input type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" onchange="addDoc('${attrSafe(name)}',this)">
+ <label style="font-size:12px;color:#718096;display:block;margin:10px 0 4px">Atau tempel tautan (Google Drive, dsb.)</label><div style="display:flex;gap:8px"><input class="inp" value="${esc(docs.link)}" placeholder="https://drive.google.com/..." onchange="setDocLink('${attrSafe(name)}',this.value)">${docs.link?`<button class="btn small" onclick="window.open('${attrSafe(docs.link)}','_blank')">Buka</button>`:''}</div></div>`}).join('<hr style="border:none;border-top:1px solid var(--line);margin:6px 0">')}
+function addDoc(name,inputEl){const file=inputEl.files[0];if(!file)return;if(file.size>4*1024*1024){showAlert('Ukuran file maksimal 4MB. Untuk file lebih besar, gunakan tautan Google Drive.');inputEl.value='';return}
+ const reader=new FileReader();reader.onload=function(e){const t=tenders[curT];t.docs[name]=t.docs[name]||{files:[],link:''};t.docs[name].files.push({name:file.name,size:file.size,data:e.target.result,date:new Date().toLocaleString('id-ID')});
+ try{save()}catch(err){t.docs[name].files.pop();showAlert('Penyimpanan penuh. Hapus beberapa dokumen lama atau gunakan tautan Google Drive untuk file ini.');return}
+ renderDetail()};reader.readAsDataURL(file)}
+function removeDoc(name,idx){askConfirm('Hapus dokumen ini?',function(){const t=tenders[curT];t.docs[name].files.splice(idx,1);save();renderDetail()})}
+function downloadDoc(name,idx){const t=tenders[curT];const f=t.docs[name].files[idx];const a=document.createElement('a');a.href=f.data;a.download=f.name;document.body.appendChild(a);a.click();document.body.removeChild(a)}
+function openDoc(name,idx){const t=tenders[curT];const f=t.docs[name].files[idx];const w=window.open();if(w)w.document.write('<title>'+f.name+'</title><body style="margin:0"><iframe src="'+f.data+'" style="width:100%;height:100vh;border:0"></iframe></body>')}
+function setDocLink(name,val){const t=tenders[curT];t.docs[name]=t.docs[name]||{files:[],link:''};t.docs[name].link=val.trim();save();renderDetail()}
+function total(t,n){let s=0;t.crit.forEach(c=>{const x=parseFloat((t.sc[n]||{})[c.id]);if(!isNaN(x))s+=x/10*c.w});return s}
+function tScore(t){if(!t.peserta.length)return '<div class="empty">Pilih vendor peserta di tab Vendor & Undangan dulu.</div>';const sum=t.crit.reduce((a,c)=>a+c.w,0);
+ return `<div class="pad"><div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">Kriteria & bobot</b><button class="btn small" onclick="addCrit()">+ Tambah kriteria</button></div><div class="scroll"><table><thead><tr><th>Kriteria</th><th>Bobot %</th><th></th></tr></thead><tbody>${t.crit.map(c=>`<tr><td><input class="inp" value="${esc(c.n)}" oninput="cwt('${c.id}','n',this.value)"></td><td><input class="inp num" type="number" value="${c.w}" oninput="cwt('${c.id}','w',this.value)"></td><td><button class="btn small del" onclick="delCrit('${c.id}')">Hapus</button></td></tr>`).join('')}</tbody></table></div><p id="wsum" style="font-size:12px;color:#718096">Total bobot: ${sum}%${sum!==100?' (sebaiknya 100%)':''}</p>
+ <b style="font-size:13px">Nilai presentasi produk (0-10)</b><div class="scroll"><table><thead><tr><th>Kriteria</th>${t.peserta.map(n=>`<th>${esc(n)}</th>`).join('')}</tr></thead><tbody>${t.crit.map(c=>`<tr><td>${esc(c.n)} <small>(${c.w}%)</small></td>${t.peserta.map((n,pi)=>`<td><input class="inp num" type="number" min="0" max="10" step="0.5" value="${esc((t.sc[n]||{})[c.id]??'')}" oninput="sc(${pi},'${c.id}',this.value)"></td>`).join('')}</tr>`).join('')}<tr><td><b>Nilai akhir (dari 100)</b></td>${t.peserta.map((n,pi)=>`<td><b id="tot${pi}">${total(t,n).toFixed(1)}</b></td>`).join('')}</tr></tbody></table></div></div>`}
+function cwt(id,k,v){const t=tenders[curT];const c=t.crit.find(x=>x.id===id);c[k]=k==='w'?(parseFloat(v)||0):v;save();const s=t.crit.reduce((a,c)=>a+c.w,0);wsum.textContent='Total bobot: '+s+'%'+(s!==100?' (sebaiknya 100%)':'')}
+function addCrit(){const t=tenders[curT];t.crit.push({id:uid(),n:'Kriteria baru',w:0});save();renderDetail()}
+function delCrit(id){const t=tenders[curT];if(t.crit.length<=1){showAlert('Minimal harus ada 1 kriteria.');return}askConfirm('Hapus kriteria ini? Nilai yang sudah diisi untuk kriteria ini akan hilang.',function(){t.crit=t.crit.filter(c=>c.id!==id);Object.keys(t.sc).forEach(n=>{if(t.sc[n])delete t.sc[n][id]});save();renderDetail()})}
+function sc(pi,id,v){const t=tenders[curT],n=t.peserta[pi];(t.sc[n]=t.sc[n]||{})[id]=Math.max(0,Math.min(10,parseFloat(v)));save();document.getElementById('tot'+pi).textContent=total(t,n).toFixed(1)}
+function tRes(t){const r=t.peserta.map(n=>({n,s:total(t,n)})).sort((a,b)=>b.s-a.s);if(!r.length)return '<div class="empty">Belum ada peserta yang dinilai.</div>';
+ const top=r[0].s>0?`<div class="win">${t.winner?'Pemenang ditetapkan':'Pemenang sementara'}<br><b>${esc(t.winner||r[0].n)}</b>${t.winner?'':` · ${r[0].s.toFixed(1)} poin`}</div>`:'';
+ return top+`<div class="scroll"><table><thead><tr><th>Peringkat</th><th>Vendor</th><th>Nilai</th><th></th></tr></thead><tbody>${r.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.n)}</td><td><b>${x.s.toFixed(1)}</b></td><td><div class="bar"><i style="width:${Math.min(100,x.s)}%"></i></div></td></tr>`).join('')}</tbody></table></div><div class="pad"><button class="btn primary" onclick="setWinner()">Tetapkan pemenang: ${esc(r[0].n)}</button> <button class="btn" onclick="window.print()">Cetak hasil</button></div>`}
+function setWinner(){const t=tenders[curT];const r=t.peserta.map(n=>({n,s:total(t,n)})).sort((a,b)=>b.s-a.s);t.winner=r[0].n;t.status='Selesai';save();renderDetail();renderTenders()}
+function renderWA(){waTpl.value=tpl;waTotal.textContent=wlog.length;const d=new Date().toLocaleDateString('id-ID');waToday.textContent=wlog.filter(x=>x.at.startsWith(d)).length;waLog.innerHTML=wlog.length?wlog.slice(0,50).map(x=>`<tr><td>${esc(x.at)}</td><td>${esc(x.no)}</td><td>${esc(x.v)}</td><td>${esc(x.wa)}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Belum ada pesan. Kirim undangan dari halaman tender.</td></tr>'}
+function fmtDate(iso){if(!iso)return '-';try{return new Date(iso+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}catch(e){return iso}}
+function autoTaskList(){
+ const items=[];
+ tenders.forEach((t,ti)=>{
+  const belumUndangan=(t.peserta||[]).filter(n=>!t.sent[n]);
+  if(t.status!=='Selesai' && belumUndangan.length) items.push({urgent:true,text:'Kirim undangan ke '+belumUndangan.length+' vendor tersisa',sub:t.name,ti});
+  const belumDok=(t.peserta||[]).filter(n=>{const d=t.docs&&t.docs[n];return !(d&&(d.files.length||d.link))});
+  if(t.status!=='Selesai' && t.peserta.length && !belumUndangan.length && belumDok.length) items.push({urgent:false,text:'Lengkapi penawaran dari '+belumDok.length+' vendor',sub:t.name,ti});
+  const sudahDok=t.peserta.length && !belumDok.length;
+  const adaNilai=t.peserta.some(n=>{const sc=t.sc[n];return sc&&Object.keys(sc).length});
+  if(t.status!=='Selesai' && sudahDok && !adaNilai) items.push({urgent:false,text:'Nilai presentasi produk vendor',sub:t.name,ti});
+  if(t.status!=='Selesai' && adaNilai && !t.winner) items.push({urgent:true,text:'Tetapkan pemenang tender',sub:t.name,ti});
+ });
+ return items;
+}
+function renderWork(){
+ const items=autoTaskList();
+ document.getElementById('autoTasks').innerHTML=items.length?items.map(x=>`<div class="vr" style="cursor:pointer" onclick="openDetail(${x.ti})"><div class="dot" style="background:${x.urgent?'#e05252':'#f59e0b'};width:9px;height:9px;border-radius:50%;flex:none"></div><div class="i"><b>${esc(x.text)}</b><small>${esc(x.sub)}</small></div><span class="status ${x.urgent?'s-red':'s-yellow'}">${x.urgent?'Urgent':'Normal'}</span></div>`).join(''):'<div class="empty">Tidak ada tugas otomatis saat ini. Semua tender berjalan lancar.</div>';
+ document.getElementById('manualTasks').innerHTML=tasks.length?tasks.map((x,i)=>`<div class="vr"><input type="checkbox" ${x.done?'checked':''} onchange="toggleTask(${i})" style="width:auto"><div class="i" style="${x.done?'text-decoration:line-through;color:#9aa5b1':''}">${esc(x.text)}</div><button class="btn small del" onclick="delTask(${i})">Hapus</button></div>`).join(''):'<div class="empty pad">Belum ada catatan pribadi.</div>'}
+function addTask(){const v=document.getElementById('newTask').value.trim();if(!v)return;tasks.unshift({text:v,done:false});document.getElementById('newTask').value='';save();renderWork()}
+function toggleTask(i){tasks[i].done=!tasks[i].done;save();renderWork()}
+function delTask(i){tasks.splice(i,1);save();renderWork()}
+
+function renderLogistics(){
+ const done=tenders.filter(t=>t.status==='Selesai'&&t.winner);
+ document.getElementById('logRows').innerHTML=done.length?done.map((t,i)=>{const lg=t.logistik||{status:'Diproses',estimasi:'',catatan:''};return `<tr><td>${esc(t.nomorSurat||t.no||'-')}</td><td>${esc(t.name)}</td><td>${esc(t.winner)}</td><td><input class="inp" type="date" value="${esc(lg.estimasi)}" onchange="setLog(${tenders.indexOf(t)},'estimasi',this.value)"></td><td><input class="inp" value="${esc(lg.catatan)}" placeholder="Catatan" onchange="setLog(${tenders.indexOf(t)},'catatan',this.value)"></td><td><select onchange="setLog(${tenders.indexOf(t)},'status',this.value)">${['Diproses','Dikirim','Diterima','Terlambat'].map(s=>`<option ${s===lg.status?'selected':''}>${s}</option>`).join('')}</select></td></tr>`}).join(''):'<tr><td colspan="6" class="empty">Belum ada tender yang selesai dengan pemenang. Baris muncul otomatis setelah Anda menetapkan pemenang di tab Hasil.</td></tr>'}
+function setLog(ti,k,v){const t=tenders[ti];t.logistik=t.logistik||{status:'Diproses',estimasi:'',catatan:''};t.logistik[k]=v;save();renderLogistics()}
+
+function renderReport(){
+ const byStatus={};STAT_LIST().forEach(s=>byStatus[s]=0);tenders.forEach(t=>byStatus[t.status]=(byStatus[t.status]||0)+1);
+ const winCount={};tenders.forEach(t=>{if(t.winner)winCount[t.winner]=(winCount[t.winner]||0)+1});
+ const winners=Object.entries(winCount).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ const done=tenders.filter(t=>t.logistik);const onTime=done.filter(t=>t.logistik.status==='Diterima').length;
+ const otd=done.length?Math.round(onTime/done.length*100)+'%':'-';
+ document.getElementById('repCards').innerHTML=`<div class="card"><div class="label">Total Tender</div><div class="value">${tenders.length}</div></div><div class="card"><div class="label">Tender Selesai</div><div class="value">${byStatus['Selesai']||0}</div></div><div class="card"><div class="label">Vendor Terdaftar</div><div class="value">${vendors.length}</div></div><div class="card"><div class="label">On Time Delivery</div><div class="value">${otd}</div></div>`;
+ const maxV=Math.max(1,...Object.values(byStatus));
+ document.getElementById('repStatus').innerHTML=STAT_LIST().map(s=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>${s}</span><b>${byStatus[s]||0}</b></div><div class="bar"><i style="width:${(byStatus[s]||0)/maxV*100}%"></i></div></div>`).join('');
+ document.getElementById('repWinners').innerHTML=winners.length?winners.map(w=>`<div class="vr"><div class="i">${esc(w[0])}</div><b>${w[1]}x menang</b></div>`).join(''):'<div class="empty">Belum ada tender yang selesai dengan pemenang.</div>';
+}
+function STAT_LIST(){return ['Undangan','Penawaran','Evaluasi','Berjalan','Selesai']}
+function exportReportCSV(){
+ const rows=[['No Tender','Nama Pengadaan','Status','Deadline','Pemenang','Jumlah Vendor']];
+ tenders.forEach(t=>rows.push([t.no||'',t.name||'',t.status||'',t.deadline||'',t.winner||'',String((t.peserta||[]).length)]));
+ const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));a.download='Laporan_Tender_'+new Date().toISOString().slice(0,10)+'.csv';a.click()
+}
+
+/* ===== Google Sheets multi-user sync ===== */
+const GOOGLE_CLIENT_ID='PASTE_CLIENT_ID_ANDA.apps.googleusercontent.com';
+const SPREADSHEET_ID='16J-rJbiOPU1fXxBGynFZriNpS0jGH96FIN4oDTqQgxQ';
+const SHEETS_SCOPE='https://www.googleapis.com/auth/spreadsheets';
+let gAccessToken=sessionStorage.getItem('g_token')||null;
+let gUserEmail=sessionStorage.getItem('g_email')||'';
+let gTokenClient=null;
+function loadGIS(cb){if(window.google&&google.accounts){cb();return}const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.onload=cb;sc.onerror=function(){showAlert('Gagal memuat layanan login Google. Periksa koneksi internet.')};document.head.appendChild(sc)}
+function initGoogleClient(cb){loadGIS(function(){gTokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:SHEETS_SCOPE,callback:function(resp){if(resp.error){showAlert('Login Google gagal: '+resp.error);return}gAccessToken=resp.access_token;sessionStorage.setItem('g_token',gAccessToken);fetchGUserInfo()}});if(cb)cb()})}
+function connectGoogle(){
+ if(!GOOGLE_CLIENT_ID||GOOGLE_CLIENT_ID.indexOf('PASTE_')===0){showAlert('GOOGLE_CLIENT_ID belum diisi. Lihat panduan setup di halaman ini.');return}
+ if(!gTokenClient){initGoogleClient(function(){gTokenClient.requestAccessToken()});return}
+ gTokenClient.requestAccessToken();
+}
+function fetchGUserInfo(){fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+gAccessToken}}).then(r=>r.json()).then(function(d){gUserEmail=d.email||'';sessionStorage.setItem('g_email',gUserEmail);renderSync()}).catch(function(){renderSync()})}
+function gFetch(url,opts){opts=opts||{};opts.headers=Object.assign({Authorization:'Bearer '+gAccessToken,'Content-Type':'application/json'},opts.headers||{});return fetch(url,opts).then(function(r){if(r.status===401){gAccessToken=null;sessionStorage.removeItem('g_token');throw new Error('Sesi Google berakhir, silakan hubungkan ulang.')}return r.json()})}
+async function ensureAppSheets(){
+ const meta=await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID);
+ const titles=(meta.sheets||[]).map(x=>x.properties.title);
+ const need=[];
+ if(titles.indexOf('App_Vendors')===-1)need.push({addSheet:{properties:{title:'App_Vendors'}}});
+ if(titles.indexOf('App_Tenders')===-1)need.push({addSheet:{properties:{title:'App_Tenders'}}});
+ if(need.length)await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+':batchUpdate',{method:'POST',body:JSON.stringify({requests:need})});
+}
+const VENDOR_COLS=['company','pic','jabatan','wa','cat','alamat','pakta_tanggal','pakta_link'];
+const TENDER_COLS=['no','name','deadline','status','peserta','tgl','jam','tempat','nomorSurat','tglSurat','perihal','acara','kota','companyName','signerName','signerJabatan','winner','crit_json','sc_json','doclinks_json'];
+function vendorToRow(v){return [v.company||'',v.pic||'',v.jabatan||'',v.wa||'',v.cat||'',v.alamat||'',(v.pakta&&v.pakta.tanggal)||'',(v.pakta&&v.pakta.link)||'']}
+function rowToVendor(r){const g=i=>r[i]!=null?r[i]:'';const v={company:g(0),pic:g(1),jabatan:g(2),wa:g(3),cat:g(4),alamat:g(5)};if(g(6)||g(7))v.pakta={tanggal:g(6),link:g(7)};return v}
+function tenderToRow(t){return [t.no||'',t.name||'',t.deadline||'',t.status||'',(t.peserta||[]).join('|'),t.tgl||'',t.jam||'',t.tempat||'',t.nomorSurat||'',t.tglSurat||'',t.perihal||'',t.acara||'',t.kota||'',t.companyName||'',t.signerName||'',t.signerJabatan||'',t.winner||'',JSON.stringify(t.crit||[]),JSON.stringify(t.sc||{}),JSON.stringify(Object.fromEntries(Object.entries(t.docs||{}).map(function(e){return [e[0],e[1].link||'']})))]}
+function rowToTender(r){const g=i=>r[i]!=null?r[i]:'';let crit=[],sc={},dl={};try{crit=JSON.parse(g(17)||'[]')}catch(e){}try{sc=JSON.parse(g(18)||'{}')}catch(e){}try{dl=JSON.parse(g(19)||'{}')}catch(e){}
+ const docs={};Object.keys(dl).forEach(function(k){docs[k]={files:[],link:dl[k]}});
+ return normT({no:g(0),name:g(1),deadline:g(2),status:g(3)||'Undangan',peserta:g(4)?g(4).split('|').filter(Boolean):[],tgl:g(5),jam:g(6),tempat:g(7),nomorSurat:g(8),tglSurat:g(9),perihal:g(10),acara:g(11),kota:g(12),companyName:g(13),signerName:g(14),signerJabatan:g(15),winner:g(16)||undefined,crit:crit.length?crit:undefined,sc:sc,docs:docs,vendor:g(4)?g(4).split('|').filter(Boolean).length:0})}
+async function pushToSheets(){
+ if(!gAccessToken){showAlert('Hubungkan akun Google dulu.');return}
+ try{
+  await ensureAppSheets();
+  const vRows=[VENDOR_COLS].concat(vendors.map(vendorToRow));
+  const tRows=[TENDER_COLS].concat(tenders.map(tenderToRow));
+  await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Vendors!A1:Z2000:clear',{method:'POST'});
+  await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Tenders!A1:Z2000:clear',{method:'POST'});
+  await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Vendors!A1?valueInputOption=RAW',{method:'PUT',body:JSON.stringify({values:vRows})});
+  await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Tenders!A1?valueInputOption=RAW',{method:'PUT',body:JSON.stringify({values:tRows})});
+  localStorage.setItem('lastSyncPush',new Date().toLocaleString('id-ID'));
+  showAlert('Data berhasil dikirim ke Google Sheets.');renderSync();
+ }catch(err){showAlert('Gagal mengirim: '+err.message)}
+}
+function pullFromSheets(){
+ if(!gAccessToken){showAlert('Hubungkan akun Google dulu.');return}
+ askConfirm('Menarik data dari Google Sheets akan MENGGANTI seluruh data vendor & tender di perangkat ini (dokumen file tetap tersimpan). Lanjutkan?',async function(){
+  try{
+   await ensureAppSheets();
+   const vRes=await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Vendors!A2:Z2000');
+   const tRes=await gFetch('https://sheets.googleapis.com/v4/spreadsheets/'+SPREADSHEET_ID+'/values/App_Tenders!A2:Z2000');
+   const vRows=vRes.values||[],tRows=tRes.values||[];
+   if(vRows.length)vendors=vRows.filter(r=>r[0]).map(rowToVendor);
+   if(tRows.length)tenders=tRows.filter(r=>r[1]).map(rowToTender);
+   save();renderVendors();renderTenders();
+   localStorage.setItem('lastSyncPull',new Date().toLocaleString('id-ID'));
+   showAlert('Data terbaru dari Google Sheets berhasil ditarik.');renderSync();
+  }catch(err){showAlert('Gagal menarik data: '+err.message)}
+ });
+}
+function renderSync(){
+ document.getElementById('syncStatus').innerHTML=gAccessToken?('<span class="ok">Terhubung sebagai '+esc(gUserEmail||'akun Google')+'</span>'):'<span style="color:#a22d2d">Belum terhubung ke Google</span>';
+ const pu=localStorage.getItem('lastSyncPush'),pl=localStorage.getItem('lastSyncPull');
+ document.getElementById('syncLast').textContent=(pu?'Terakhir kirim: '+pu+'  ':'')+(pl?'Terakhir tarik: '+pl:'');
+}
+
+renderTenders();renderVendors();renderWA();
+</script>
+</body>
+</html>
