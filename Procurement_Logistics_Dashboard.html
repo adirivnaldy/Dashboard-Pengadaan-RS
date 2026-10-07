@@ -327,9 +327,9 @@ function exportReportCSV(){
 const GOOGLE_CLIENT_ID=775767049403-mjis01n0j18lpcr3ikqvudh74lcvri7c.apps.googleusercontent.com.apps.googleusercontent.com;
 const SPREADSHEET_ID='16J-rJbiOPU1fXxBGynFZriNpS0jGH96FIN4oDTqQgxQ';
 const SHEETS_SCOPE='https://www.googleapis.com/auth/spreadsheets';
-let gAccessToken=sessionStorage.getItem('g_token')||null;
-let gUserEmail=sessionStorage.getItem('g_email')||'';
-let gTokenClient=null;
+var gAccessToken=sessionStorage.getItem('g_token')||null;
+var gUserEmail=sessionStorage.getItem('g_email')||'';
+var gTokenClient=null;
 function loadGIS(cb){if(window.google&&google.accounts){cb();return}const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.onload=cb;sc.onerror=function(){showAlert('Gagal memuat layanan login Google. Periksa koneksi internet.')};document.head.appendChild(sc)}
 function initGoogleClient(cb){loadGIS(function(){gTokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:SHEETS_SCOPE,callback:function(resp){if(resp.error){showAlert('Login Google gagal: '+resp.error);return}gAccessToken=resp.access_token;sessionStorage.setItem('g_token',gAccessToken);fetchGUserInfo()}});if(cb)cb()})}
 function connectGoogle(){
