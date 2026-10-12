@@ -217,8 +217,8 @@ function msg(t,v){const m={pic:v.pic,perusahaan:v.company,tender:t.name,no:t.no,
 function openDetail(i){curT=i;curTab='info';showPage('tdetail',document.querySelectorAll('.nav button')[2]);renderDetail()}
 function setTab(x){curTab=x;renderDetail()}
 function renderDetail(){const t=tenders[curT];tdTitle.textContent=t.name;tdSub.textContent=t.no+' · Deadline '+t.deadline;
- tdTabs.innerHTML=[['info','Detail'],['undangan','Vendor & Undangan'],['penawaran','Penawaran Vendor'],['ba','BA Nego'],['nilai','Penilaian'],['hasil','Hasil']].map(x=>`<button class="tb ${curTab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
- tdBody.innerHTML=curTab==='info'?tInfo(t):curTab==='undangan'?tInv(t):curTab==='penawaran'?tOffer(t):curTab==='ba'?tBA(t):curTab==='nilai'?tScore(t):tRes(t)}
+ tdTabs.innerHTML=[['info','Detail'],['undangan','Vendor & Undangan'],['penawaran','Penawaran Vendor'],['ba','BA Nego'],['nilai','Penilaian'],['evakom','Evakom'],['hasil','Hasil']].map(x=>`<button class="tb ${curTab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
+ tdBody.innerHTML=curTab==='info'?tInfo(t):curTab==='undangan'?tInv(t):curTab==='penawaran'?tOffer(t):curTab==='ba'?tBA(t):curTab==='nilai'?tScore(t):curTab==='evakom'?tEvakom(t):tRes(t)}
 function tInfo(t){const f=(l,k,ty,full)=>`<div class="field ${full?'full':''}"><label>${l}</label><input type="${ty||'text'}" value="${esc(t[k])}" oninput="tenders[curT].${k}=this.value;save()"></div>`;
  return `<div class="form-grid">${f('NAMA PENGADAAN / PEKERJAAN','name','',1)}${f('NOMOR TENDER (INTERNAL)','no')}${f('DEADLINE (TEKS)','deadline')}${f('TANGGAL PRESENTASI/ANWIJZING','tgl','date')}${f('JAM','jam','time')}${f('TEMPAT ACARA','tempat','',1)}<div class="field"><label>STATUS</label><select onchange="tenders[curT].status=this.value;save();renderTenders()">${['Undangan','Penawaran','Evaluasi','Berjalan','Selesai'].map(x=>`<option ${x===t.status?'selected':''}>${x}</option>`).join('')}</select></div><div class="field" style="align-self:end"><button class="btn del" onclick="delTender()">Hapus tender</button></div></div>
  <div class="panel-head" style="border-top:1px solid var(--line);margin-top:4px"><h3>Data Surat Undangan Anwijzing</h3><span>Untuk generate file .doc per vendor</span></div>
@@ -363,10 +363,10 @@ const VENDOR_COLS=['company','pic','jabatan','wa','cat','alamat','pakta_tanggal'
 const TENDER_COLS=['no','name','deadline','status','peserta','tgl','jam','tempat','nomorSurat','tglSurat','perihal','acara','kota','companyName','signerName','signerJabatan','winner','crit_json','sc_json','doclinks_json','ba_json','logistik_json','hasil_json'];
 function vendorToRow(v){return [v.company||'',v.pic||'',v.jabatan||'',v.wa||'',v.cat||'',v.alamat||'',(v.pakta&&v.pakta.tanggal)||'',(v.pakta&&v.pakta.link)||'',v.email||'']}
 function rowToVendor(r){const g=i=>r[i]!=null?r[i]:'';const v={company:g(0),pic:g(1),jabatan:g(2),wa:g(3),cat:g(4),alamat:g(5),email:g(8)};if(g(6)||g(7))v.pakta={tanggal:g(6),link:g(7)};return v}
-function tenderToRow(t){return [t.no||'',t.name||'',t.deadline||'',t.status||'',(t.peserta||[]).join('|'),t.tgl||'',t.jam||'',t.tempat||'',t.nomorSurat||'',t.tglSurat||'',t.perihal||'',t.acara||'',t.kota||'',t.companyName||'',t.signerName||'',t.signerJabatan||'',t.winner||'',JSON.stringify(t.crit||[]),JSON.stringify(t.sc||{}),JSON.stringify(Object.fromEntries(Object.entries(t.docs||{}).map(function(e){return [e[0],e[1].link||'']}))),JSON.stringify(t.ba||{}),JSON.stringify(t.logistik||{}),JSON.stringify({gate:t.gate||{min:0},reason:t.winnerReason||'',ai:t.autoInit?1:0})]}
+function tenderToRow(t){return [t.no||'',t.name||'',t.deadline||'',t.status||'',(t.peserta||[]).join('|'),t.tgl||'',t.jam||'',t.tempat||'',t.nomorSurat||'',t.tglSurat||'',t.perihal||'',t.acara||'',t.kota||'',t.companyName||'',t.signerName||'',t.signerJabatan||'',t.winner||'',JSON.stringify(t.crit||[]),JSON.stringify(t.sc||{}),JSON.stringify(Object.fromEntries(Object.entries(t.docs||{}).map(function(e){return [e[0],e[1].link||'']}))),JSON.stringify(t.ba||{}),JSON.stringify(t.logistik||{}),JSON.stringify({gate:t.gate||{min:0},reason:t.winnerReason||'',ai:t.autoInit?1:0,ev:t.ev||{}})]}
 function rowToTender(r){const g=i=>r[i]!=null?r[i]:'';let crit=[],sc={},dl={};try{crit=JSON.parse(g(17)||'[]')}catch(e){}try{sc=JSON.parse(g(18)||'{}')}catch(e){}try{dl=JSON.parse(g(19)||'{}')}catch(e){}let ba0={},lg0={};try{ba0=JSON.parse(g(20)||'{}')}catch(e){}try{lg0=JSON.parse(g(21)||'{}')}catch(e){}let hs0={};try{hs0=JSON.parse(g(22)||'{}')}catch(e){}
  const docs={};Object.keys(dl).forEach(function(k){docs[k]={files:[],link:dl[k]}});
- return normT({no:g(0),name:g(1),deadline:g(2),status:g(3)||'Undangan',peserta:g(4)?g(4).split('|').filter(Boolean):[],tgl:g(5),jam:g(6),tempat:g(7),nomorSurat:g(8),tglSurat:g(9),perihal:g(10),acara:g(11),kota:g(12),companyName:g(13),signerName:g(14),signerJabatan:g(15),winner:g(16)||undefined,crit:crit.length?crit:undefined,sc:sc,docs:docs,ba:ba0,gate:hs0.gate,winnerReason:hs0.reason||'',autoInit:!!hs0.ai,logistik:(Object.keys(lg0).length?lg0:undefined),vendor:g(4)?g(4).split('|').filter(Boolean).length:0})}
+ return normT({no:g(0),name:g(1),deadline:g(2),status:g(3)||'Undangan',peserta:g(4)?g(4).split('|').filter(Boolean):[],tgl:g(5),jam:g(6),tempat:g(7),nomorSurat:g(8),tglSurat:g(9),perihal:g(10),acara:g(11),kota:g(12),companyName:g(13),signerName:g(14),signerJabatan:g(15),winner:g(16)||undefined,crit:crit.length?crit:undefined,sc:sc,docs:docs,ba:ba0,gate:hs0.gate,winnerReason:hs0.reason||'',autoInit:!!hs0.ai,ev:hs0.ev,logistik:(Object.keys(lg0).length?lg0:undefined),vendor:g(4)?g(4).split('|').filter(Boolean).length:0})}
 async function pushToSheets(){
  if(!gAccessToken){showAlert('Hubungkan akun Google dulu.');return}
  try{
@@ -798,6 +798,118 @@ function setWinner(){var t=tenders[curT],elig=rankList(t).filter(function(x){ret
  if(top.p>0&&minP>0&&top.p>minP&&!(t.winnerReason||'').trim()){showAlert('Pemenang bukan harga terendah. Isi dulu alasan penetapan pemenang.');return}
  t.winner=top.n;t.status='Selesai';save();renderDetail();renderTenders()}
 function resetWinner(){askConfirm('Batalkan penetapan pemenang tender ini?',function(){var t=tenders[curT];delete t.winner;t.status='Evaluasi';save();renderDetail();renderTenders()})}
+
+/* ===== Evakom (Evaluasi Komersial) ===== */
+const XLSX_MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+function dlFile(bytes,name,mime){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([bytes],{type:mime}));a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){if(a.parentNode)a.parentNode.removeChild(a)},500)}
+const XL={
+ col:function(i){var s='';i++;while(i>0){var m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s},
+ /* style index: 0 default,1 judul,2 header,3 teks kiri,4 teks tengah,5 angka #,##0,6 desimal 0.0,7 seksi kiri,8 seksi tengah,9 polos,10 tebal polos,11 kesimpulan tengah */
+ styles:function(){var H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  function xf(num,font,fill,border,h,v,wrap){return '<xf numFmtId="'+num+'" fontId="'+font+'" fillId="'+fill+'" borderId="'+border+'" xfId="0" applyNumberFormat="1" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="'+h+'" vertical="'+v+'"'+(wrap?' wrapText="1"':'')+'/></xf>'}
+  return H+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="165" formatCode="0.0"/></numFmts>'
+  +'<fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="14"/><name val="Calibri"/></font></fonts>'
+  +'<fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9D9D9"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF2F2F2"/><bgColor indexed="64"/></patternFill></fill></fills>'
+  +'<borders count="2"><border><left/><right/><top/><bottom/><diagonal/></border><border><left style="thin"><color auto="1"/></left><right style="thin"><color auto="1"/></right><top style="thin"><color auto="1"/></top><bottom style="thin"><color auto="1"/></bottom><diagonal/></border></borders>'
+  +'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'
+  +'<cellXfs count="12">'+xf(0,0,0,0,'left','bottom',0)+xf(0,2,0,0,'left','center',0)+xf(0,1,2,1,'center','center',1)+xf(0,0,0,1,'left','top',1)+xf(0,0,0,1,'center','top',1)+xf(3,0,0,1,'right','top',0)+xf(165,0,0,1,'right','top',0)+xf(0,1,3,1,'left','top',1)+xf(0,1,3,1,'center','top',1)+xf(0,0,0,0,'left','bottom',0)+xf(0,1,0,0,'left','bottom',0)+xf(0,1,3,1,'center','center',1)+'</cellXfs>'
+  +'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'},
+ sheet:function(o){var H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  var rows=o.rows.map(function(r,ri){var cells=r.map(function(c,ci){if(!c)return '';var ref=XL.col(ci)+(ri+1);
+    if(typeof c.v==='number')return '<c r="'+ref+'" s="'+c.s+'"><v>'+c.v+'</v></c>';
+    if(c.v===''||c.v==null)return '<c r="'+ref+'" s="'+c.s+'"/>';
+    return '<c r="'+ref+'" s="'+c.s+'" t="inlineStr"><is><t xml:space="preserve">'+DX.esc(c.v)+'</t></is></c>'}).join('');
+   var ht=o.heights&&o.heights[ri];return '<row r="'+(ri+1)+'"'+(ht?' ht="'+ht+'" customHeight="1"':'')+'>'+cells+'</row>'}).join('');
+  return H+'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetPr><pageSetUpPr fitToPage="1"/></sheetPr><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><cols>'+o.widths.map(function(w,i){return '<col min="'+(i+1)+'" max="'+(i+1)+'" width="'+w+'" customWidth="1"/>'}).join('')+'</cols><sheetData>'+rows+'</sheetData>'+(o.merges.length?'<mergeCells count="'+o.merges.length+'">'+o.merges.map(function(m){return '<mergeCell ref="'+m+'"/>'}).join('')+'</mergeCells>':'')+'<pageMargins left="0.5" right="0.5" top="0.6" bottom="0.6" header="0.3" footer="0.3"/><pageSetup orientation="landscape" fitToWidth="1" fitToHeight="0"/></worksheet>'},
+ build:function(o){var H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+  var ct=H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>';
+  var rels=H+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>';
+  var wb=H+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="'+DX.esc(o.name)+'" sheetId="1" r:id="rId1"/></sheets></workbook>';
+  var wrels=H+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>';
+  return DX.zip([{name:'[Content_Types].xml',data:ct},{name:'_rels/.rels',data:rels},{name:'xl/workbook.xml',data:wb},{name:'xl/_rels/workbook.xml.rels',data:wrels},{name:'xl/styles.xml',data:XL.styles()},{name:'xl/worksheets/sheet1.xml',data:XL.sheet(o)}])}
+};
+function evDef(t){t.ev=t.ev||{};var e=t.ev;if(!e.std)e.std={};var s=e.std;
+ if(s.label==null)s.label='Standar RSSG';if(s.franco==null)s.franco='Gresik';if(s.dp==null)s.dp='DP';if(s.bayar==null)s.bayar='';if(s.delivery==null)s.delivery='';if(s.lain==null)s.lain='';if(s.teknis==null)s.teknis=100;
+ if(!e.vendors)e.vendors={};if(e.tgl==null)e.tgl='';return e}
+function evV(t,n){var e=evDef(t);if(!e.vendors[n])e.vendors[n]={merk:'',telaah:'',franco:true};return e.vendors[n]}
+function evTelaah(t,n){var v=evV(t,n);if(v.telaah)return v.telaah;var d=t.docs&&t.docs[n];return d&&((d.files&&d.files.length)||d.link)?'Lengkap':'Belum dicek'}
+function evPpnTag(b){return b.ppn==='incl'?'incl PPN':b.ppn==='excl'?'excl PPN':'tanpa PPN'}
+function evBayarSplit(b){var lines=(b.bayar||'').split('\n').map(function(s){return s.trim()}).filter(Boolean),dp=[],rest=[];
+ lines.forEach(function(l){if(/^[-\u2013\u2022]?\s*DP\b/i.test(l))dp.push(l.replace(/^[-\u2013\u2022]\s*/,''));else rest.push(l)});
+ return {dp:dp.join('\n')||'-',rest:rest.join('\n')||'-'}}
+function evLain(b){var a=(b.lain||'').split('\n').concat((b.kondisi||'').split('\n')).map(function(s){return s.trim().replace(/^[-\u2013\u2022]\s*/,'')}).filter(Boolean);return a.length?a.map(function(x){return '- '+x}).join('\n'):'-'}
+function evTglText(t){var e=evDef(t),iso=e.tgl||baDef(t).tgl||new Date().toISOString().slice(0,10),p=iso.split('-');return (t.kota||'Gresik')+', '+parseInt(p[2],10)+' '+BULAN_ID[parseInt(p[1],10)-1]+' '+p[0]}
+function evakomData(t){var e=evDef(t),st=e.std,hps=Number(baDef(t).hps)||0,gm=gateMin(t),names=t.peserta.slice();
+ var inf=names.map(function(n){var b=baV(t,n),tw=baSum(b,'tawar'),ng=baSum(b,'nego'),fin=ng||tw;
+  var hasTech=t.crit.some(function(c){var x=(t.sc[n]||{})[c.id];return c.auto!=='harga'&&x!=null&&x!==''});
+  return {n:n,b:b,tw:tw,ng:ng,fin:fin,hasTech:hasTech,tech:techPct(t,n),tel:evTelaah(t,n),ev:evV(t,n),bs:evBayarSplit(b)}});
+ var modes={};inf.forEach(function(x){if(x.tw||x.ng)modes[evPpnTag(x.b)]=1});var mk=Object.keys(modes),sfx=mk.length===1?' ('+mk[0]+')':'',mixed=mk.length>1;
+ var money=function(v,x){return v?(mixed?numFmt(v)+' ('+evPpnTag(x.b)+')':v):'-'};
+ var rows=[],blank=names.map(function(){return ''});
+ rows.push({a:'I',b:'Telaah dokumen',std:'Lengkap',vals:inf.map(function(x){return x.tel}),kind:'sec'});
+ rows.push({a:'',b:'Anggaran',std:hps>0?hps:'',vals:inf.map(function(x){return hps>0&&x.fin?(x.fin>hps?'Melebihi anggaran':'Di bawah anggaran'):''}),kind:'item',merge:true});
+ rows.push({a:'II',b:'Merk',std:'',vals:inf.map(function(x){return x.ev.merk||''}),kind:'sec'});
+ rows.push({a:'III',b:'Penawaran'+sfx,std:'',vals:inf.map(function(x){return money(x.tw,x)}),kind:'sec'});
+ rows.push({a:'',b:'Negosiasi'+sfx,std:'',vals:inf.map(function(x){return money(x.ng,x)}),kind:'item',merge:true});
+ rows.push({a:'',b:'Hemat nego (Rp)',std:'',vals:inf.map(function(x){return x.tw&&x.ng?(mixed?numFmt(x.tw-x.ng):x.tw-x.ng):'-'}),kind:'item',merge:true});
+ rows.push({a:'',b:'Hemat nego (%)',std:'',vals:inf.map(function(x){return x.tw&&x.ng?Math.round((x.tw-x.ng)/x.tw*1000)/10:'-'}),kind:'item',merge:true,dec:true});
+ rows.push({a:'IV',b:'Lain-lain',std:'',vals:blank,kind:'sec'});
+ rows.push({a:'',b:1,c:'Franco',std:st.franco,vals:inf.map(function(x){return x.ev.franco!==false?'\u221a':'-'}),kind:'item'});
+ rows.push({a:'',b:2,c:'Pembayaran',std:st.dp,vals:inf.map(function(x){return x.bs.dp}),kind:'item'});
+ rows.push({a:'',b:'',c:'',std:st.bayar,vals:inf.map(function(x){return x.bs.rest}),kind:'item'});
+ rows.push({a:'',b:3,c:'Delivery',std:st.delivery,vals:inf.map(function(x){return (x.b.delivery||'').trim()||'-'}),kind:'item'});
+ rows.push({a:'',b:4,c:'Lainnya',std:st.lain,vals:inf.map(function(x){return evLain(x.b)}),kind:'item'});
+ rows.push({a:'V',b:'Telaah Teknis (terlampir detail)',std:'',vals:blank,kind:'sec'});
+ rows.push({a:'',b:1,c:'Nilai',std:Number(st.teknis)||100,vals:inf.map(function(x){return x.hasTech?Math.round(x.tech*10)/10:'-'}),kind:'item',dec:true});
+ rows.push({a:'',b:2,c:'Syarat Lulus',std:gm||'-',vals:blank,kind:'item'});
+ var res=inf.map(function(x){return !x.hasTech?'Belum dinilai':gm?(x.tech>=gm?'Lulus':'Tidak Lulus'):'-'});
+ rows.push({a:'',b:3,c:'Lulus/Tidak Lulus',std:'Lulus',vals:res,kind:'item'});
+ rows.push({a:'Kesimpulan : Syarat Lulus',b:'',std:'Lulus & Lengkap',vals:inf.map(function(x,i){return x.tel+' & '+res[i]}),kind:'concl'});
+ return {title:'Evaluasi Komersial : '+(t.name||''),stdLabel:st.label||'Standar RSSG',names:names,rows:rows,place:evTglText(t),role:'Pengadaan dan Logistik'}}
+function evakomXlsx(t){var d=evakomData(t),nv=d.names.length,W=[5,22,16,24].concat(d.names.map(function(){return 34})),last=XL.col(3+nv);
+ var R=[],merges=[],heights={};
+ var cell=function(v,s){return {v:v,s:s}};
+ var mkrow=function(){var r=[];for(var i=0;i<4+nv;i++)r.push(null);return r};
+ var r0=mkrow();r0[0]=cell(d.title,1);R.push(r0);merges.push('A1:'+last+'1');heights[0]=24;
+ R.push(mkrow());
+ var h=mkrow();h[0]=cell('NO',2);h[1]=cell('URAIAN',2);h[2]=cell('',2);h[3]=cell(d.stdLabel,2);d.names.forEach(function(n,i){h[4+i]=cell(n,2)});R.push(h);merges.push('B3:C3');heights[2]=30;
+ var lines=function(v,w){return String(v==null?'':v).split('\n').reduce(function(a,l){return a+Math.max(1,Math.ceil(l.length/Math.max(8,Math.floor(w*1.05))))},0)};
+ d.rows.forEach(function(row){var ri=R.length+1,r=mkrow(),sec=row.kind==='sec'||row.kind==='concl';
+  var isNum=function(v){return typeof v==='number'};
+  r[0]=cell(row.a,row.kind==='concl'?7:(sec?8:4));
+  if(row.kind==='concl'){r[1]=cell('',7);r[2]=cell('',7);merges.push('A'+ri+':C'+ri)}
+  else if(sec||row.merge){r[1]=cell(row.b,sec?7:3);r[2]=cell('',sec?7:3);merges.push('B'+ri+':C'+ri)}
+  else{r[1]=cell(row.b,4);r[2]=cell(row.c||'',3)}
+  var st=row.std;r[3]=isNum(st)?cell(st,row.dec?6:5):cell(st,row.kind==='concl'?11:3);
+  var ml=lines(row.b,22),mx=Math.max(lines(row.c,16),lines(st,24));
+  row.vals.forEach(function(v,i){var sty=isNum(v)?(row.dec?6:5):(row.kind==='concl'?11:(sec?8:3));r[4+i]=cell(v,sty);mx=Math.max(mx,lines(v,34))});
+  if(mx>1)heights[ri-1]=15*mx+2;R.push(r)});
+ R.push(mkrow());var f1=mkrow();f1[0]=cell(d.place,9);R.push(f1);var f2=mkrow();f2[0]=cell(d.role,10);R.push(f2);
+ return XL.build({name:'Evakom',rows:R,merges:merges,widths:W,heights:heights})}
+function dlEvakom(){var t=tenders[curT];if(!t.peserta.length){showAlert('Pilih vendor peserta dulu.');return}dlFile(evakomXlsx(t),'Evakom_'+safeName(t.name)+'.xlsx',XLSX_MIME)}
+function evStd(k,v){evDef(tenders[curT]).std[k]=v;save();renderDetail()}
+function evTgl(v){evDef(tenders[curT]).tgl=v;save();renderDetail()}
+function evVend(n,k,v){evV(tenders[curT],n)[k]=v;save();renderDetail()}
+function tEvakom(t){if(!t.peserta.length)return '<div class="empty">Pilih vendor peserta di tab Vendor & Undangan dulu.</div>';
+ var d=evakomData(t),e=evDef(t),st=e.std;
+ var sf=function(l,k,ty){return '<div class="field"><label>'+l+'</label><input '+(ty?'type="'+ty+'" ':'')+'value="'+esc(st[k])+'" onchange="evStd(\''+k+'\',this.value)"></div>'};
+ var vrows=t.peserta.map(function(n){var v=evV(t,n),a=attrSafe(n),tel=evTelaah(t,n);
+  return '<tr><td>'+esc(n)+'</td><td><input class="inp" value="'+esc(v.merk)+'" placeholder="Merk / tipe" onchange="evVend(\''+a+'\',\'merk\',this.value)"></td><td><select onchange="evVend(\''+a+'\',\'telaah\',this.value)">'+['Lengkap','Tidak lengkap','Belum dicek'].map(function(o){return '<option '+(o===tel?'selected':'')+'>'+o+'</option>'}).join('')+'</select></td><td style="text-align:center"><input type="checkbox" style="width:auto" '+(v.franco!==false?'checked':'')+' onchange="evVend(\''+a+'\',\'franco\',this.checked)"></td></tr>'}).join('');
+ var fmt=function(v,row){if(typeof v==='number')return row.dec?String(v).replace('.',','):numFmt(v);return esc(v==null?'':v)};
+ var bd='border:1px solid #cbd5e0;padding:6px 8px;vertical-align:top;white-space:pre-line;font-size:12px';
+ var head='<tr><th style="'+bd+'">NO</th><th colspan="2" style="'+bd+'">URAIAN</th><th style="'+bd+'">'+esc(d.stdLabel)+'</th>'+d.names.map(function(n){return '<th style="'+bd+'">'+esc(n)+'</th>'}).join('')+'</tr>';
+ var body=d.rows.map(function(row){var bg=(row.kind==='sec'||row.kind==='concl')?'background:#f2f2f2;font-weight:700;':'';var cells;
+  if(row.kind==='concl')cells='<td colspan="3" style="'+bd+';'+bg+'">'+esc(row.a)+'</td>';
+  else if(row.kind==='sec'||row.merge)cells='<td style="'+bd+';'+bg+'text-align:center">'+esc(row.a)+'</td><td colspan="2" style="'+bd+';'+bg+'">'+esc(row.b)+'</td>';
+  else cells='<td style="'+bd+';text-align:center">'+esc(row.a)+'</td><td style="'+bd+';text-align:center">'+esc(row.b)+'</td><td style="'+bd+'">'+esc(row.c||'')+'</td>';
+  cells+='<td style="'+bd+';'+bg+(typeof row.std==='number'?'text-align:right':'')+'">'+fmt(row.std,row)+'</td>';
+  row.vals.forEach(function(v){cells+='<td style="'+bd+';'+bg+(typeof v==='number'?'text-align:right':'')+'">'+fmt(v,row)+'</td>'});
+  return '<tr>'+cells+'</tr>'}).join('');
+ return '<div class="panel-head"><h3>Evaluasi Komersial</h3><span><button class="btn small primary" onclick="dlEvakom()">Unduh Excel (.xlsx)</button> <button class="btn small" onclick="window.print()">Cetak</button></span></div>'
+ +'<div class="pad"><p style="font-size:12px;color:#718096;margin:0 0 10px">Harga penawaran dan nego, PPN, pembayaran, delivery, serta syarat lain diambil otomatis dari tab <b>BA Nego</b>. Nilai teknis dan batas lulus diambil dari tab <b>Penilaian</b>. Isian di bawah hanya untuk bagian yang tidak ada di BA.</p>'
+ +'<b style="font-size:13px">Isian khusus Evakom</b><div class="scroll"><table><thead><tr><th>Vendor</th><th>Merk</th><th>Telaah dokumen</th><th>Franco</th></tr></thead><tbody>'+vrows+'</tbody></table></div>'
+ +'<div class="form-grid" style="margin-top:10px"><div class="field"><label>TANGGAL EVAKOM</label><input type="date" value="'+esc(e.tgl)+'" onchange="evTgl(this.value)"></div>'+sf('JUDUL KOLOM STANDAR','label')+sf('STANDAR FRANCO','franco')+sf('STANDAR DP','dp')+sf('STANDAR PEMBAYARAN','bayar')+sf('STANDAR DELIVERY','delivery')+sf('STANDAR LAINNYA','lain')+sf('NILAI STANDAR TEKNIS','teknis','number')+'</div></div>'
+ +'<div class="pad" style="padding-top:0"><div class="scroll"><table style="min-width:'+(560+d.names.length*220)+'px;border-collapse:collapse"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div><p style="margin:14px 0 0;font-size:13px">'+esc(d.place)+'<br><b>'+esc(d.role)+'</b></p></div>'}
 
 renderTenders();renderVendors();renderWA();
 </script>
