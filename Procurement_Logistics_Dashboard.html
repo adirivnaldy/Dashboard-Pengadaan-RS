@@ -115,15 +115,16 @@
 <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px"><button class="btn primary" onclick="connectGoogle()">Hubungkan Akun Google (izin email)</button></div>
 <label style="display:flex;gap:8px;align-items:center;font-size:13px"><input type="checkbox" id="mNotif" style="width:auto" onchange="mCfgChange()"> Kirim notifikasi WhatsApp (Fonnte) setelah email terkirim</label>
 <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13px"><input type="checkbox" id="mAttach" style="width:auto" onchange="mCfgChange()"> Lampirkan surat undangan / BA Nego (.docx) otomatis</label>
+<label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13px"><input type="checkbox" id="mIcs" style="width:auto" onchange="mCfgChange()"> Sertakan undangan kalender (.ics) berisi jadwal dan tempat pada email tahap 2</label>
 <label style="font-size:12px;color:#718096;display:block;margin:14px 0 4px">Jenis pesan yang diedit</label>
-<select id="etKind" class="inp" onchange="etKindChange()"><option value="inv">Undangan Anwijzing</option><option value="ba">Berita Acara Nego</option></select>
-<label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Subjek email</label><input id="etSubject" class="inp" oninput="etInput()">
-<label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Isi email</label><textarea id="etBody" class="inp" rows="10" oninput="etInput()"></textarea>
-<label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Notifikasi WhatsApp (dikirim lewat Fonnte)</label><textarea id="etNotif" class="inp" rows="6" oninput="etInput()"></textarea>
-<p style="font-size:12px;color:#718096;margin:8px 0">Kolom otomatis: {pic} {perusahaan} {tender} {no} {tanggal} {jam} {tempat} {deadline} {email} {kami} {ttd} {nomor_surat} dan {harga} (khusus BA). Perubahan tersimpan otomatis di browser ini.</p>
+<select id="etKind" class="inp" onchange="etKindChange()"><option value="inv">Tahap 2 - Undangan Anwijzing</option><option value="ba">Berita Acara Nego</option><option value="kes">Tahap 1 - Konfirmasi kesediaan</option><option value="rem">Pengingat jadwal (WhatsApp)</option></select>
+<div id="phChips2" style="display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0"></div><div id="etMailBox"><label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Subjek email</label><input id="etSubject" class="inp" oninput="etInput()">
+<label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Isi email</label><textarea id="etBody" class="inp" rows="10" oninput="etInput()"></textarea></div>
+<label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Notifikasi WhatsApp (dikirim lewat Fonnte)</label><textarea id="etNotif" class="inp" rows="6" oninput="etInput()"></textarea><label style="font-size:12px;color:#718096;display:block;margin:12px 0 4px">Pratinjau</label><pre id="etPrev" style="white-space:pre-wrap;background:#f7f9fb;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font:12px/1.5 inherit;margin:0"></pre>
+<p style="font-size:12px;color:#718096;margin:8px 0">Klik tombol kolom otomatis untuk menyisipkan ke kotak teks yang terakhir Anda klik. Perubahan tersimpan otomatis di browser ini.</p>
 <button class="btn" onclick="etReset()">Kembalikan ke teks bawaan</button>
 </div></div>
-<div class="panel"><div class="panel-head"><h3>Template Pesan Undangan</h3><span>Salin isi template Word Anda ke sini</span></div><div class="pad"><textarea id="waTpl" class="inp" rows="12" oninput="tpl=this.value;save()"></textarea><p style="font-size:12px;color:#718096">Bila Fonnte aktif, tombol kirim di halaman tender langsung mengirim pesan ke nomor PIC vendor. Bila tidak aktif, tombol membuka WhatsApp dengan pesan terisi.</p></div></div>
+<div class="panel"><div class="panel-head"><h3>Template Pesan Undangan</h3><span>Ubah sesuka Anda, lalu lihat pratinjau di bawah</span></div><div class="pad"><div id="phChips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px"></div><p style="font-size:12px;color:#718096;margin:0 0 12px">Klik tombol di atas untuk menyisipkan kolom otomatis ke kotak teks yang terakhir Anda klik.</p><label style="font-size:12px;color:#718096;display:block;margin-bottom:4px">Tahap 2 - Anwijzing / presentasi</label><textarea id="waTpl" class="inp" rows="12" oninput="tpl=this.value;save();updatePreview()"></textarea><button class="btn small" style="margin-top:6px" onclick="resetWaTpl(2)">Kembalikan teks bawaan</button><label style="font-size:12px;color:#718096;display:block;margin:14px 0 4px">Tahap 1 - Konfirmasi kesediaan</label><textarea id="waTplK" class="inp" rows="9" oninput="tplK=this.value;localStorage.setItem('proc_tplkes',tplK);updatePreview()"></textarea><button class="btn small" style="margin-top:6px" onclick="resetWaTpl(1)">Kembalikan teks bawaan</button><label style="font-size:12px;color:#718096;display:block;margin:14px 0 4px">Pratinjau (memakai data tender yang terakhir dibuka)</label><pre id="waPrev" style="white-space:pre-wrap;background:#f7f9fb;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font:12px/1.5 inherit;margin:0"></pre><p style="font-size:12px;color:#718096">Bila Fonnte aktif, tombol kirim di halaman tender langsung mengirim pesan ke nomor PIC vendor. Bila tidak aktif, tombol membuka WhatsApp dengan pesan terisi.</p></div></div>
 <div class="panel" style="margin-top:18px"><div class="panel-head"><h3>Riwayat Pengiriman</h3></div><div class="scroll"><table><thead><tr><th>Waktu</th><th>Tender</th><th>Vendor</th><th>Nomor</th><th>Via</th></tr></thead><tbody id="waLog"></tbody></table></div></div>
 </section>
 
@@ -195,37 +196,34 @@ function delVendorAt(i){askConfirm('Hapus vendor ini?',function(){const n=vendor
 function openVendor(){document.getElementById('modalTitle').textContent='Tambah Vendor';document.getElementById('modalBody').innerHTML=`<div class="form-grid"><div class="field"><label>NAMA PERUSAHAAN</label><input id="vCompany"></div><div class="field"><label>NAMA PIC</label><input id="vPic"></div><div class="field"><label>NOMOR WHATSAPP</label><input id="vWa" placeholder="628..."></div><div class="field full"><label>EMAIL</label><input id="vEmail" type="email" placeholder="nama@perusahaan.com"></div><div class="field"><label>KATEGORI</label><select id="vCat"><option>Farmasi</option><option>Alkes</option><option>Umum</option><option>ATK</option></select></div><div class="full"><button class="btn primary" onclick="addVendor()">Simpan Vendor</button></div></div>`;document.getElementById('modal').classList.add('show')}
 function addVendor(){let company=vCompany.value.trim();if(!company){showAlert('Nama perusahaan wajib diisi');return}vendors.push({company,pic:vPic.value||'-',wa:vWa.value||'-',email:(vEmail.value||'').trim(),cat:vCat.value});save();closeModal();renderVendors();showAlert('Vendor berhasil ditambahkan.')}
 function openTender(){document.getElementById('modalTitle').textContent='Buat Tender Baru';document.getElementById('modalBody').innerHTML=`<div class="form-grid"><div class="field"><label>NOMOR TENDER</label><input id="tNo" value="TDR-2026-${String(99+tenders.length).padStart(3,'0')}"></div><div class="field"><label>DEADLINE</label><input id="tDeadline" type="date"></div><div class="field full"><label>NAMA PENGADAAN</label><input id="tName" placeholder="Contoh: Pengadaan Obat Generik"></div><div class="field full"><label>PILIH VENDOR</label><div class="checklist">${vendors.map((v,i)=>`<label class="check"><input type="checkbox" name="vendorPick" value="${i}"> ${v.company}</label>`).join('')}</div></div><div class="field"><label>TANGGAL PRESENTASI</label><input id="tTgl" type="date"></div><div class="field"><label>JAM</label><input id="tJam" type="time"></div><div class="field full"><label>TEMPAT</label><input id="tTempat" placeholder="Ruang rapat lt. 2"></div><div class="full"><button class="btn primary" onclick="addTender()">Simpan & Buka Tender</button></div></div>`;document.getElementById('modal').classList.add('show')}
-function addTender(){let name=tName.value.trim();if(!name){showAlert('Nama pengadaan wajib diisi');return}let picks=[...document.querySelectorAll('input[name="vendorPick"]:checked')].map(x=>vendors[x.value].company);let d=tDeadline.value?new Date(tDeadline.value).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'-';tenders.unshift(normT({no:tNo.value,name,deadline:d,vendor:picks.length,status:'Undangan',peserta:picks,tgl:tTgl.value,jam:tJam.value,tempat:tTempat.value}));save();closeModal();renderTenders();openDetail(0)}
+function addTender(){let name=tName.value.trim();if(!name){showAlert('Nama pengadaan wajib diisi');return}let picks=[...document.querySelectorAll('input[name="vendorPick"]:checked')].map(x=>vendors[x.value].company);let d=tDeadline.value?new Date(tDeadline.value).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}):'-';tenders.unshift(normT({no:tNo.value,name,deadline:d,vendor:picks.length,status:'Undangan',tahap:1,peserta:picks,tgl:tTgl.value,jam:tJam.value,tempat:tTempat.value}));save();closeModal();renderTenders();openDetail(0)}
 function generateDoc(type){showAlert(`Demo: ${type} akan dibuat otomatis dari template Word/PDF berdasarkan data tender dan vendor. Pada tahap integrasi, tombol ini akan menghasilkan file per vendor.`)}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 
 const CRIT=[['Kualitas & kesesuaian produk',30],['Harga penawaran',25],['Spesifikasi teknis',20],['Garansi & purna jual',10],['Demo / presentasi',10],['Izin edar & legalitas',5]];
-const DEF_TPL=`Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nDengan hormat, kami mengundang perusahaan Bapak/Ibu mengikuti tender *{tender}* (No. {no}).\n\nPresentasi produk:\nTanggal: {tanggal}\nJam: {jam}\nTempat: {tempat}\nBatas penawaran: {deadline}\n\nMohon konfirmasi kehadiran melalui pesan ini.\n\nTerima kasih.\nBagian Pengadaan & Logistik`;
+const DEF_TPL=`Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nDengan hormat, kami mengundang perusahaan Bapak/Ibu mengikuti tender *{tender}* (No. {no}).\n\nAcara: {acara}\nHari/tanggal: {tanggal}\nJam: {jam} WIB\nTempat: {tempat}\nBatas penawaran: {deadline}\n\nMohon konfirmasi kehadiran melalui pesan ini.\n\nTerima kasih.\nBagian Pengadaan & Logistik`;
 let tpl=localStorage.getItem('proc_tpl')||DEF_TPL,wlog=JSON.parse(localStorage.getItem('proc_wlog')||'[]'),curT=0,curTab='info';
 let tasks=JSON.parse(localStorage.getItem('proc_tasks')||'[]');
 function uid(){return 'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function showAlert(msg){const d=document.createElement('div');d.style.cssText='position:fixed;left:50%;top:22px;transform:translateX(-50%);background:#1f2937;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;z-index:99999;max-width:90%;box-shadow:0 4px 14px rgba(0,0,0,.25)';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),3800)}
 function askConfirm(msg,cb){const ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:99999';ov.innerHTML='<div style="background:#fff;border-radius:10px;padding:20px;max-width:360px;width:90%;box-shadow:0 10px 30px rgba(0,0,0,.2)"><p style="font-size:13px;line-height:1.6;margin:0 0 16px;color:#1f2937">'+esc(msg)+'</p><div style="display:flex;gap:8px;justify-content:flex-end"><button id="cfCancel" class="btn">Batal</button><button id="cfOk" class="btn del">Ya</button></div></div>';document.body.appendChild(ov);ov.querySelector('#cfCancel').onclick=function(){ov.remove()};ov.querySelector('#cfOk').onclick=function(){ov.remove();cb()}}
 
-function normT(t){t.peserta=t.peserta||[];t.sent=t.sent||{};t.sc=t.sc||{};t.crit=t.crit||CRIT.map(c=>({n:c[0],w:c[1]}));(function(){let mig=false;t.crit.forEach((c,ci)=>{if(!c.id){c.id=uid();c._oi=ci;mig=true}});if(mig){Object.keys(t.sc||{}).forEach(vn=>{const old=t.sc[vn]||{};const nw={};t.crit.forEach(c=>{if(c._oi!=null&&old[c._oi]!=null)nw[c.id]=old[c._oi]});t.sc[vn]=nw});t.crit.forEach(c=>delete c._oi)}})();t.tgl=t.tgl||'';t.jam=t.jam||'';t.tempat=t.tempat||'';t.nomorSurat=t.nomorSurat||'';t.tglSurat=t.tglSurat||'';t.docs=t.docs||{};t.perihal=t.perihal||'UNDANGAN';t.acara=t.acara||'Anwijzing & Survey';t.kota=t.kota||'Gresik';t.signerName=t.signerName!=null?t.signerName:'Apt. Meinita S. Damayanti, S. Farm';t.signerJabatan=t.signerJabatan!=null?t.signerJabatan:'Manajer';t.companyName=t.companyName||'PT Cipta Nirmala';baDef(t);t.emailSent=t.emailSent||{};t.gate=t.gate||{min:0};if(!t.autoInit){var hc=t.crit.find(function(c){return /harga/i.test(c.n)});if(hc&&!t.crit.some(function(c){return c.auto}))hc.auto='harga';t.autoInit=true}return t}
+function normT(t){t.peserta=t.peserta||[];t.sent=t.sent||{};t.sc=t.sc||{};t.crit=t.crit||CRIT.map(c=>({n:c[0],w:c[1]}));(function(){let mig=false;t.crit.forEach((c,ci)=>{if(!c.id){c.id=uid();c._oi=ci;mig=true}});if(mig){Object.keys(t.sc||{}).forEach(vn=>{const old=t.sc[vn]||{};const nw={};t.crit.forEach(c=>{if(c._oi!=null&&old[c._oi]!=null)nw[c.id]=old[c._oi]});t.sc[vn]=nw});t.crit.forEach(c=>delete c._oi)}})();t.tgl=t.tgl||'';t.jam=t.jam||'';t.tempat=t.tempat||'';t.nomorSurat=t.nomorSurat||'';t.tglSurat=t.tglSurat||'';t.docs=t.docs||{};t.perihal=t.perihal||'UNDANGAN';t.acara=t.acara||'Anwijzing & Survey';t.kota=t.kota||'Gresik';t.signerName=t.signerName!=null?t.signerName:'Apt. Meinita S. Damayanti, S. Farm';t.signerJabatan=t.signerJabatan!=null?t.signerJabatan:'Manajer';t.companyName=t.companyName||'PT Cipta Nirmala';baDef(t);t.emailSent=t.emailSent||{};t.gate=t.gate||{min:0};t.durasi=t.durasi||120;t.jadwal=t.jadwal||{};t.slot=t.slot||{tgl:'',jam:'',dur:60,gap:15,order:'daftar'};t.nomorSuratK=t.nomorSuratK||'';t.batasK=t.batasK||'';t.rsvp=t.rsvp||{};t.sentK=t.sentK||{};t.emailSentK=t.emailSentK||{};if(t.tahap!==1)t.tahap=2;if(!t.autoInit){var hc=t.crit.find(function(c){return /harga/i.test(c.n)});if(hc&&!t.crit.some(function(c){return c.auto}))hc.auto='harga';t.autoInit=true}return t}
 tenders.forEach(normT);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cnt=t=>t.peserta.length||t.vendor;
 const vend=n=>vendors.find(v=>v.company===n)||{company:n,pic:'-',wa:'-'};
 function phone(h){let d=String(h).replace(/\D/g,'');if(d.startsWith('0'))d='62'+d.slice(1);return d}
-function msg(t,v){const m={pic:v.pic,perusahaan:v.company,tender:t.name,no:t.no,tanggal:t.tgl?new Date(t.tgl).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-',jam:t.jam||'-',tempat:t.tempat||'-',deadline:t.deadline};return tpl.replace(/\{(\w+)\}/g,(a,k)=>m[k]!=null?m[k]:a)}
 function openDetail(i){curT=i;curTab='info';showPage('tdetail',document.querySelectorAll('.nav button')[2]);renderDetail()}
 function setTab(x){curTab=x;renderDetail()}
 function renderDetail(){const t=tenders[curT];tdTitle.textContent=t.name;tdSub.textContent=t.no+' · Deadline '+t.deadline;
  tdTabs.innerHTML=[['info','Detail'],['undangan','Vendor & Undangan'],['penawaran','Penawaran Vendor'],['ba','BA Nego'],['nilai','Penilaian'],['evakom','Evakom'],['hasil','Hasil']].map(x=>`<button class="tb ${curTab===x[0]?'on':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('');
  tdBody.innerHTML=curTab==='info'?tInfo(t):curTab==='undangan'?tInv(t):curTab==='penawaran'?tOffer(t):curTab==='ba'?tBA(t):curTab==='nilai'?tScore(t):curTab==='evakom'?tEvakom(t):tRes(t)}
 function tInfo(t){const f=(l,k,ty,full)=>`<div class="field ${full?'full':''}"><label>${l}</label><input type="${ty||'text'}" value="${esc(t[k])}" oninput="tenders[curT].${k}=this.value;save()"></div>`;
- return `<div class="form-grid">${f('NAMA PENGADAAN / PEKERJAAN','name','',1)}${f('NOMOR TENDER (INTERNAL)','no')}${f('DEADLINE (TEKS)','deadline')}${f('TANGGAL PRESENTASI/ANWIJZING','tgl','date')}${f('JAM','jam','time')}${f('TEMPAT ACARA','tempat','',1)}<div class="field"><label>STATUS</label><select onchange="tenders[curT].status=this.value;save();renderTenders()">${['Undangan','Penawaran','Evaluasi','Berjalan','Selesai'].map(x=>`<option ${x===t.status?'selected':''}>${x}</option>`).join('')}</select></div><div class="field" style="align-self:end"><button class="btn del" onclick="delTender()">Hapus tender</button></div></div>
- <div class="panel-head" style="border-top:1px solid var(--line);margin-top:4px"><h3>Data Surat Undangan Anwijzing</h3><span>Untuk generate file .doc per vendor</span></div>
- <div class="form-grid">${f('NOMOR SURAT','nomorSurat','',1)}${f('TANGGAL SURAT','tglSurat','date')}${f('PERIHAL','perihal')}${f('ACARA','acara')}${f('KOTA (KOP TANGGAL SURAT)','kota')}${f('NAMA PERUSAHAAN (PENGUNDANG)','companyName')}${f('NAMA PENANDATANGAN','signerName')}${f('JABATAN PENANDATANGAN','signerJabatan')}</div>`}
+ return `<div class="form-grid">${f('NAMA PENGADAAN / PEKERJAAN','name','',1)}${f('NOMOR TENDER (INTERNAL)','no')}${f('DEADLINE (TEKS)','deadline')}${f('TANGGAL PRESENTASI/ANWIJZING','tgl','date')}${f('JAM','jam','time')}${f('TEMPAT ACARA','tempat','',1)}${f('DURASI ACARA (MENIT)','durasi','number')}<div class="field"><label>STATUS</label><select onchange="tenders[curT].status=this.value;save();renderTenders()">${['Undangan','Penawaran','Evaluasi','Berjalan','Selesai'].map(x=>`<option ${x===t.status?'selected':''}>${x}</option>`).join('')}</select></div><div class="field" style="align-self:end"><button class="btn del" onclick="delTender()">Hapus tender</button></div></div>
+ <div class="panel-head" style="border-top:1px solid var(--line);margin-top:4px"><h3>Data Surat Undangan</h3><span>Untuk file .docx per vendor</span></div>
+ <div class="form-grid">${f('NOMOR SURAT KESEDIAAN (TAHAP 1)','nomorSuratK','',1)}${f('BATAS KONFIRMASI KESEDIAAN','batasK','date')}${f('NOMOR SURAT ANWIJZING (TAHAP 2)','nomorSurat','',1)}${f('TANGGAL SURAT','tglSurat','date')}${f('PERIHAL','perihal')}${f('ACARA','acara')}${f('KOTA (KOP TANGGAL SURAT)','kota')}${f('NAMA PERUSAHAAN (PENGUNDANG)','companyName')}${f('NAMA PENANDATANGAN','signerName')}${f('JABATAN PENANDATANGAN','signerJabatan')}</div>`}
 function delTender(){askConfirm('Hapus tender ini?',function(){tenders.splice(curT,1);save();renderTenders();showPage('tender',document.querySelectorAll('.nav button')[2])})}
-function tInv(t){if(!vendors.length)return '<div class="empty">Belum ada vendor. Tambahkan di menu Vendor.</div>';
- return `<div class="panel-head"><h3>Pilih vendor peserta</h3><span>${t.peserta.length} dipilih ${t.peserta.length?`<button class="btn small" onclick="sendMailAll()">Kirim email + notifikasi WA ke semua</button>`:''} ${fOn()&&t.peserta.length?`<button class="btn small wa" onclick="sendAllWA()">Kirim WA ke semua</button>`:''}</span></div>`+vendors.map((v,i)=>{const on=t.peserta.includes(v.company);return `<div class="vr"><input type="checkbox" ${on?'checked':''} onchange="togglePeserta(${i})" aria-label="Pilih ${esc(v.company)}"><div class="i"><b>${esc(v.company)}</b><small>${esc(v.pic)} · ${esc(v.wa)} · ${esc(v.email||'email belum diisi')}${t.emailSent&&t.emailSent[v.company]?' · email terkirim '+esc(t.emailSent[v.company]):''}</small></div>${on?(t.sent[v.company]?`<span class="ok">Terkirim ${esc(t.sent[v.company])}</span>`:'')+`<button class="btn small" onclick="dlSurat(${i})">Surat Undangan (.docx)</button><button class="btn small" onclick="sendMail(${i})">${(t.emailSent&&t.emailSent[v.company])?'Kirim ulang email':'Kirim Email'}</button><button class="btn small wa" onclick="sendWA(${i})">${t.sent[v.company]?'Kirim ulang':'Kirim WhatsApp'}</button>`:''}</div>`}).join('')+`<div class="pad"><small style="color:#718096">"Surat Undangan (.docx)" mengikuti format template Anwijzing Anda dan otomatis terisi nomor surat, tanggal, acara, dan nama vendor. Pesan WhatsApp singkat diatur di menu WhatsApp.</small></div>`}
 function togglePeserta(i){const t=tenders[curT],n=vendors[i].company,k=t.peserta.indexOf(n);k<0?t.peserta.push(n):t.peserta.splice(k,1);save();renderDetail();renderTenders()}
 const HARI_ID=['Minggu','Senin','Selasa','Rabu','Kamis',"Jum'at",'Sabtu'];
 const BULAN_ID=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
@@ -287,15 +285,16 @@ function setDocLink(name,val){const t=tenders[curT];t.docs[name]=t.docs[name]||{
 function cwt(id,k,v){const t=tenders[curT];const c=t.crit.find(x=>x.id===id);c[k]=k==='w'?(parseFloat(v)||0):v;save();const s=t.crit.reduce((a,c)=>a+c.w,0);wsum.textContent='Total bobot: '+s+'%'+(s!==100?' (sebaiknya 100%)':'')}
 function addCrit(){const t=tenders[curT];t.crit.push({id:uid(),n:'Kriteria baru',w:0});save();renderDetail()}
 function delCrit(id){const t=tenders[curT];if(t.crit.length<=1){showAlert('Minimal harus ada 1 kriteria.');return}askConfirm('Hapus kriteria ini? Nilai yang sudah diisi untuk kriteria ini akan hilang.',function(){t.crit=t.crit.filter(c=>c.id!==id);Object.keys(t.sc).forEach(n=>{if(t.sc[n])delete t.sc[n][id]});save();renderDetail()})}
-function renderWA(){waTpl.value=tpl;waTotal.textContent=wlog.length;const d=new Date().toLocaleDateString('id-ID');waToday.textContent=wlog.filter(x=>x.at.startsWith(d)).length;waLog.innerHTML=wlog.length?wlog.slice(0,50).map(x=>`<tr><td>${esc(x.at)}</td><td>${esc(x.no)}</td><td>${esc(x.v)}</td><td>${esc(x.wa)}</td><td>${esc(x.via||'-')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Belum ada pesan. Kirim undangan dari halaman tender.</td></tr>';renderFonnte();renderMail()}
+function renderWA(){waTpl.value=tpl;waTotal.textContent=wlog.length;const d=new Date().toLocaleDateString('id-ID');waToday.textContent=wlog.filter(x=>x.at.startsWith(d)).length;waLog.innerHTML=wlog.length?wlog.slice(0,50).map(x=>`<tr><td>${esc(x.at)}</td><td>${esc(x.no)}</td><td>${esc(x.v)}</td><td>${esc(x.wa)}</td><td>${esc(x.via||'-')}</td></tr>`).join(''):'<tr><td colspan="4" class="empty">Belum ada pesan. Kirim undangan dari halaman tender.</td></tr>';var _k=document.getElementById('waTplK');if(_k)_k.value=tplK;renderFonnte();renderMail();bindTplFocus();renderChips();updatePreview()}
 function fmtDate(iso){if(!iso)return '-';try{return new Date(iso+'T00:00:00').toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'})}catch(e){return iso}}
 function autoTaskList(){
  const items=[];
  tenders.forEach((t,ti)=>{
-  const belumUndangan=(t.peserta||[]).filter(n=>!t.sent[n]);
-  if(t.status!=='Selesai' && belumUndangan.length) items.push({urgent:true,text:'Kirim undangan ke '+belumUndangan.length+' vendor tersisa',sub:t.name,ti});
+  const sm0=sentMap(t);const belumUndangan=(t.peserta||[]).filter(n=>!sm0[n]);
+  if(t.status!=='Selesai' && belumUndangan.length) items.push({urgent:true,text:(stg(t)===1?'Kirim surat kesediaan ke ':'Kirim undangan ke ')+belumUndangan.length+' vendor tersisa',sub:t.name,ti});
+  if(t.status!=='Selesai'&&stg(t)===1&&t.peserta.length&&!belumUndangan.length){const bel=t.peserta.filter(n=>((t.rsvp&&t.rsvp[n])||'belum')==='belum');items.push({urgent:false,text:bel.length?'Catat respon kesediaan '+bel.length+' vendor':'Lanjut ke Tahap 2: kirim undangan Anwijzing',sub:t.name,ti})}
   const belumDok=(t.peserta||[]).filter(n=>{const d=t.docs&&t.docs[n];return !(d&&(d.files.length||d.link))});
-  if(t.status!=='Selesai' && t.peserta.length && !belumUndangan.length && belumDok.length) items.push({urgent:false,text:'Lengkapi penawaran dari '+belumDok.length+' vendor',sub:t.name,ti});
+  if(t.status!=='Selesai' && stg(t)===2 && t.peserta.length && !belumUndangan.length && belumDok.length) items.push({urgent:false,text:'Lengkapi penawaran dari '+belumDok.length+' vendor',sub:t.name,ti});
   const sudahDok=t.peserta.length && !belumDok.length;
   const adaNilai=t.peserta.some(n=>{const sc=t.sc[n];return sc&&Object.keys(sc).length});
   if(t.status!=='Selesai' && sudahDok && !adaNilai) items.push({urgent:false,text:t.peserta.some(function(n){return baSum(baV(t,n),'tawar')>0})?'Nilai presentasi produk vendor':'Catat harga penawaran & hasil negosiasi (BA Nego)',sub:t.name,ti});
@@ -363,10 +362,10 @@ const VENDOR_COLS=['company','pic','jabatan','wa','cat','alamat','pakta_tanggal'
 const TENDER_COLS=['no','name','deadline','status','peserta','tgl','jam','tempat','nomorSurat','tglSurat','perihal','acara','kota','companyName','signerName','signerJabatan','winner','crit_json','sc_json','doclinks_json','ba_json','logistik_json','hasil_json'];
 function vendorToRow(v){return [v.company||'',v.pic||'',v.jabatan||'',v.wa||'',v.cat||'',v.alamat||'',(v.pakta&&v.pakta.tanggal)||'',(v.pakta&&v.pakta.link)||'',v.email||'']}
 function rowToVendor(r){const g=i=>r[i]!=null?r[i]:'';const v={company:g(0),pic:g(1),jabatan:g(2),wa:g(3),cat:g(4),alamat:g(5),email:g(8)};if(g(6)||g(7))v.pakta={tanggal:g(6),link:g(7)};return v}
-function tenderToRow(t){return [t.no||'',t.name||'',t.deadline||'',t.status||'',(t.peserta||[]).join('|'),t.tgl||'',t.jam||'',t.tempat||'',t.nomorSurat||'',t.tglSurat||'',t.perihal||'',t.acara||'',t.kota||'',t.companyName||'',t.signerName||'',t.signerJabatan||'',t.winner||'',JSON.stringify(t.crit||[]),JSON.stringify(t.sc||{}),JSON.stringify(Object.fromEntries(Object.entries(t.docs||{}).map(function(e){return [e[0],e[1].link||'']}))),JSON.stringify(t.ba||{}),JSON.stringify(t.logistik||{}),JSON.stringify({gate:t.gate||{min:0},reason:t.winnerReason||'',ai:t.autoInit?1:0,ev:t.ev||{}})]}
+function tenderToRow(t){return [t.no||'',t.name||'',t.deadline||'',t.status||'',(t.peserta||[]).join('|'),t.tgl||'',t.jam||'',t.tempat||'',t.nomorSurat||'',t.tglSurat||'',t.perihal||'',t.acara||'',t.kota||'',t.companyName||'',t.signerName||'',t.signerJabatan||'',t.winner||'',JSON.stringify(t.crit||[]),JSON.stringify(t.sc||{}),JSON.stringify(Object.fromEntries(Object.entries(t.docs||{}).map(function(e){return [e[0],e[1].link||'']}))),JSON.stringify(t.ba||{}),JSON.stringify(t.logistik||{}),JSON.stringify({gate:t.gate||{min:0},reason:t.winnerReason||'',ai:t.autoInit?1:0,ev:t.ev||{},x:{durasi:t.durasi,rsvp:t.rsvp,nomorSuratK:t.nomorSuratK,batasK:t.batasK,tahap:t.tahap,sentK:t.sentK,emailSentK:t.emailSentK,sent:t.sent,emailSent:t.emailSent,rem:t.rem,jadwal:t.jadwal,slot:t.slot}})]}
 function rowToTender(r){const g=i=>r[i]!=null?r[i]:'';let crit=[],sc={},dl={};try{crit=JSON.parse(g(17)||'[]')}catch(e){}try{sc=JSON.parse(g(18)||'{}')}catch(e){}try{dl=JSON.parse(g(19)||'{}')}catch(e){}let ba0={},lg0={};try{ba0=JSON.parse(g(20)||'{}')}catch(e){}try{lg0=JSON.parse(g(21)||'{}')}catch(e){}let hs0={};try{hs0=JSON.parse(g(22)||'{}')}catch(e){}
  const docs={};Object.keys(dl).forEach(function(k){docs[k]={files:[],link:dl[k]}});
- return normT({no:g(0),name:g(1),deadline:g(2),status:g(3)||'Undangan',peserta:g(4)?g(4).split('|').filter(Boolean):[],tgl:g(5),jam:g(6),tempat:g(7),nomorSurat:g(8),tglSurat:g(9),perihal:g(10),acara:g(11),kota:g(12),companyName:g(13),signerName:g(14),signerJabatan:g(15),winner:g(16)||undefined,crit:crit.length?crit:undefined,sc:sc,docs:docs,ba:ba0,gate:hs0.gate,winnerReason:hs0.reason||'',autoInit:!!hs0.ai,ev:hs0.ev,logistik:(Object.keys(lg0).length?lg0:undefined),vendor:g(4)?g(4).split('|').filter(Boolean).length:0})}
+ return normT({no:g(0),name:g(1),deadline:g(2),status:g(3)||'Undangan',peserta:g(4)?g(4).split('|').filter(Boolean):[],tgl:g(5),jam:g(6),tempat:g(7),nomorSurat:g(8),tglSurat:g(9),perihal:g(10),acara:g(11),kota:g(12),companyName:g(13),signerName:g(14),signerJabatan:g(15),winner:g(16)||undefined,crit:crit.length?crit:undefined,sc:sc,docs:docs,ba:ba0,gate:hs0.gate,winnerReason:hs0.reason||'',autoInit:!!hs0.ai,ev:hs0.ev,durasi:xg(hs0,'durasi'),rsvp:xg(hs0,'rsvp'),nomorSuratK:xg(hs0,'nomorSuratK'),batasK:xg(hs0,'batasK'),tahap:xg(hs0,'tahap'),sentK:xg(hs0,'sentK'),emailSentK:xg(hs0,'emailSentK'),sent:xg(hs0,'sent'),emailSent:xg(hs0,'emailSent'),rem:xg(hs0,'rem'),jadwal:xg(hs0,'jadwal'),slot:xg(hs0,'slot'),logistik:(Object.keys(lg0).length?lg0:undefined),vendor:g(4)?g(4).split('|').filter(Boolean).length:0})}
 async function pushToSheets(){
  if(!gAccessToken){showAlert('Hubungkan akun Google dulu.');return}
  try{
@@ -464,24 +463,6 @@ function hariOf(iso){var d=new Date(iso+'T00:00:00');return HARI_ID[d.getDay()]}
 function safeName(s){return String(s||'').replace(/\W+/g,'_')}
 
 /* ===== Surat undangan Anwijzing (.docx) ===== */
-function suratDocxBytes(t,v){var P=DX.p,R=DX.r;var hariTgl=tglIndo(t.tgl);
- var tglSurat=t.tglSurat?tglIndo(t.tglSurat).split(', ')[1]:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
- var A={after:80},x=[];
- x.push(P('Nomor : '+(t.nomorSurat||'-'),A));x.push(P('Perihal : '+t.perihal,A));x.push(P(''));
- x.push(P(t.kota+', '+tglSurat,A));x.push(P(''));
- x.push(P('Kepada Yth,',A));x.push(P([R(v.company,{b:1})],A));x.push(P('di',A));x.push(P('Tempat',A));x.push(P(''));
- x.push(P('Dengan hormat,',A));x.push(P(''));
- x.push(P('Sehubungan dengan kebutuhan '+t.name+' di Rumah Sakit Semen Gresik, dengan ini kami mengundang saudara pada :',{after:80,jc:'both'}));x.push(P(''));
- x.push(P('Hari/ tanggal\t: '+hariTgl,{after:80,tabs:[1900]}));
- x.push(P('Jam\t: '+(t.jam||'-')+' WIB',{after:80,tabs:[1900]}));
- x.push(P('Tempat\t: '+(t.tempat||'-'),{after:80,tabs:[1900],left:1900,hanging:1900}));
- x.push(P('Acara\t: '+t.acara,{after:80,tabs:[1900]}));x.push(P(''));
- x.push(P('Demikian, atas perhatiannya disampaikan terima kasih.',{after:80,jc:'both'}));x.push(P(''));
- x.push(P(t.companyName,A));x.push(P(''));x.push(P('Hormat kami,',A));x.push(P(''));x.push(P(''));
- x.push(P([R(t.signerName,{b:1,u:1})],A));x.push(P(t.signerJabatan,A));x.push(P(''));
- x.push(P('Catatan : - Harap konfirmasi kedatangan ke contact person di bawah ini.',A));
- return DX.build(x.join(''),{font:'Times New Roman',sz:24,footer:false,margin:{top:1134,right:1134,bottom:1134,left:1418}})}
-function dlSurat(i){var t=tenders[curT],v=vendors[i];dlBytes(suratDocxBytes(t,v),'Undangan_Anwijzing_'+safeName(v.company)+'.docx')}
 
 /* ===== BA Nego ===== */
 const PRESET_BAYAR=[
@@ -603,38 +584,6 @@ async function testFonnte(){var tok=document.getElementById('fToken').value.trim
   if(j.status===true||j.Status===true){var ok=j.device_status==='connect';st.style.color=ok?'#087a50':'#a22d2d';st.textContent=(ok?'Terhubung: ':'Token valid, tetapi perangkat belum tersambung ke WhatsApp: ')+(j.name||'-')+' ('+(j.device||'-')+'), paket '+(j.package||'-')+', sisa kuota '+(j.quota||'-')}
   else{st.style.color='#a22d2d';st.textContent='Fonnte menolak: '+(j.reason||'token tidak valid')}
  }catch(e){st.style.color='#a22d2d';st.textContent='Tidak bisa menghubungi Fonnte dari browser ('+e.message+'). Kemungkinan diblokir kebijakan CORS atau koneksi internet bermasalah.'}}
-async function fonnteSend(target,message,file,fname){var c=fcfg();var fd=new FormData();fd.append('target',target);fd.append('message',message);fd.append('countryCode','62');
- if(file){fd.append('file',file,fname);fd.append('filename',fname)}
- var res;try{res=await fetch('https://api.fonnte.com/send',{method:'POST',headers:{Authorization:c.token},body:fd})}catch(e){throw new Error('tidak bisa terhubung ke Fonnte dari browser (kemungkinan diblokir CORS atau internet terputus)')}
- var j={};try{j=await res.json()}catch(e){}
- if(!(j.status===true||j.Status===true))throw new Error(j.reason||j.detail||('HTTP '+res.status));
- return j}
-function markSent(t,v,via){var at=new Date().toLocaleString('id-ID');t.sent[v.company]=at;wlog.unshift({no:t.no,v:v.company,wa:v.wa,at:at,via:via});save()}
-async function sendInvite(t,v){var text=msg(t,v),c=fcfg(),note='';
- if(c.attach){try{var blob=new Blob([suratDocxBytes(t,v)],{type:DOCX_MIME});await fonnteSend(phoneLocal(v.wa),text,blob,'Undangan_Anwijzing_'+safeName(v.company)+'.docx');markSent(t,v,'Fonnte + lampiran');return 'dengan lampiran surat'}
-  catch(e){if(/tidak bisa terhubung/.test(e.message))throw e;note=' (lampiran gagal: '+e.message+', terkirim tanpa lampiran)'}}
- await fonnteSend(phoneLocal(v.wa),text);markSent(t,v,'Fonnte');return 'teks'+note}
-function openWaMe(t,v){window.open('https://wa.me/'+phone(v.wa)+'?text='+encodeURIComponent(msg(t,v)),'_blank');markSent(t,v,'WhatsApp biasa');renderDetail()}
-async function sendWA(i){var t=tenders[curT],v=vendors[i];
- if(!validWA(v.wa)){showAlert('Nomor WhatsApp '+v.company+' belum valid. Lengkapi lewat tombol Edit di menu Vendor.');return}
- if(fOn()){showAlert('Mengirim ke '+v.company+' ...');
-  try{var r=await sendInvite(t,v);renderDetail();showAlert('Terkirim ke '+(v.pic||v.company)+' ('+r+')')}
-  catch(err){askConfirm('Gagal kirim otomatis: '+err.message+'. Buka WhatsApp biasa sebagai gantinya?',function(){openWaMe(t,v)})}
-  return}
- openWaMe(t,v)}
-function sendAllWA(){var t=tenders[curT];
- if(!fOn()){showAlert('Aktifkan Fonnte dulu di menu WhatsApp (isi token lalu Simpan).');return}
- var list=t.peserta.map(function(n){return vendors.find(function(v){return v.company===n})}).filter(Boolean);
- var todo=list.filter(function(v){return !t.sent[v.company]});
- var ok=todo.filter(function(v){return validWA(v.wa)}),bad=todo.filter(function(v){return !validWA(v.wa)});
- if(!ok.length){showAlert(todo.length?'Nomor WhatsApp vendor belum valid. Lengkapi lewat tombol Edit di menu Vendor.':'Semua vendor peserta sudah menerima undangan. Pakai "Kirim ulang" per vendor bila perlu.');return}
- askConfirm('Kirim undangan otomatis lewat Fonnte ke '+ok.length+' vendor'+(bad.length?' ('+bad.length+' dilewati: nomor WA belum valid)':'')+'? Pesan dikirim berurutan dengan jeda beberapa detik agar nomor WhatsApp aman.',async function(){
-  var done=0,fails=[];
-  for(var k=0;k<ok.length;k++){var v=ok[k];showAlert('Mengirim '+(k+1)+'/'+ok.length+': '+v.company+' ...');
-   try{await sendInvite(t,v);done++;if(tenders[curT]===t&&curTab==='undangan')renderDetail()}catch(e){fails.push(v.company+' ('+e.message+')')}
-   if(k<ok.length-1)await sleep(4000+Math.random()*4000)}
-  if(tenders[curT]===t)renderDetail();
-  showAlert('Selesai: '+done+' terkirim'+(fails.length?', '+fails.length+' gagal: '+fails.join('; '):'.'))})}
 async function waNego(name){var t=tenders[curT],v=vendors.find(function(x){return x.company===name});var b=baV(t,name);var ng=baSum(b,'nego');
  if(!v||!ng){showAlert('Isi dulu harga hasil negosiasi.');return}
  if(!validWA(v.wa)){showAlert('Nomor WhatsApp vendor belum valid.');return}
@@ -650,40 +599,24 @@ function saveGClient(){var v=document.getElementById('gClientInput').value.trim(
 /* ===== Email (Gmail API) + notifikasi WhatsApp (Fonnte) ===== */
 const MAIL_DEF={
  inv:{subject:'Undangan Anwijzing & Survey - {tender}',
-  body:'Yth. Bapak/Ibu {pic}\n{perusahaan}\n\nDengan hormat,\n\nTerlampir surat undangan resmi untuk mengikuti {tender} pada:\nHari/tanggal : {tanggal}\nJam : {jam} WIB\nTempat : {tempat}\n\nMohon konfirmasi kehadiran dengan membalas email ini.\n\nTerima kasih.\n\nHormat kami,\n{ttd}\n{kami}',
-  notif:'Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nKami telah mengirim email undangan *{tender}* beserta surat resmi (lampiran) ke {email}. Mohon cek inbox/spam dan konfirmasi kehadiran.\n\nJadwal: {tanggal}, {jam}, {tempat}\n\nTerima kasih.\n{kami}'},
+  body:'Yth. Bapak/Ibu {pic}\n{perusahaan}\n\nDengan hormat,\n\nTerlampir surat undangan resmi untuk mengikuti {tender} pada:\nAcara : {acara}\nHari/tanggal : {tanggal}\nJam : {jam} WIB\nTempat : {tempat}\n\nMohon konfirmasi kehadiran dengan membalas email ini.\n\nTerima kasih.\n\nHormat kami,\n{ttd}\n{kami}',
+  notif:'Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nKami telah mengirim email undangan *{tender}* beserta surat resmi (lampiran) ke {email}. Mohon cek inbox/spam dan konfirmasi kehadiran.\n\nAcara: {acara}\nJadwal: {tanggal}, {jam}, {tempat}\n\nTerima kasih.\n{kami}'},
  ba:{subject:'Berita Acara Klarifikasi dan Negosiasi Harga - {tender}',
   body:'Yth. Bapak/Ibu {pic}\n{perusahaan}\n\nDengan hormat,\n\nTerlampir Berita Acara Klarifikasi dan Negosiasi Harga untuk {tender} dengan harga akhir {harga}. Mohon ditinjau, ditandatangani, dan dikirim kembali melalui email ini.\n\nTerima kasih.\n\nHormat kami,\n{ttd}\n{kami}',
   notif:'Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nKami telah mengirim Berita Acara hasil negosiasi *{tender}* ke email {email}. Mohon dicek, ditandatangani, dan dikirim kembali.\n\nTerima kasih.\n{kami}'}
 };
 var etCur='inv';
-function mailTpl(){var s={};try{s=JSON.parse(localStorage.getItem('proc_mailtpl')||'{}')||{}}catch(e){}
- return {inv:Object.assign({},MAIL_DEF.inv,s.inv||{}),ba:Object.assign({},MAIL_DEF.ba,s.ba||{})}}
-function mcfg(){var c={};try{c=JSON.parse(localStorage.getItem('proc_mailcfg')||'{}')||{}}catch(e){}return {notif:c.notif!==false,attach:c.attach!==false}}
-function fillTpl(text,t,v,extra){
- var m={pic:v.pic||'',perusahaan:v.company,tender:t.name,no:t.no,tanggal:tglIndo(t.tgl),jam:t.jam||'-',tempat:t.tempat||'-',deadline:t.deadline,email:v.email||'',kami:t.companyName||'',ttd:t.signerName||'',nomor_surat:t.nomorSurat||'-'};
- if(extra)for(var k in extra)m[k]=extra[k];
- return String(text||'').replace(/\{(\w+)\}/g,function(a,k){return m[k]!=null?m[k]:a})}
 function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(e||'').trim())}
 function gHasMail(){return !!gAccessToken&&(sessionStorage.getItem('g_scope')||'').indexOf('gmail.send')>=0}
 function needGmail(){if(gHasMail())return false;var id=gClientId();if(!id||id.indexOf('PASTE_')===0){showAlert('Isi Google Client ID di menu Sinkronisasi dulu.');return true}
  connectGoogle();showAlert('Pilih akun Google dan centang izin kirim email, lalu klik tombol kirim lagi.');return true}
 /* editor template */
-function renderMail(){var kind=document.getElementById('etKind');if(!kind)return;
- var tp=mailTpl()[etCur],c=mcfg();kind.value=etCur;
- document.getElementById('etSubject').value=tp.subject;document.getElementById('etBody').value=tp.body;document.getElementById('etNotif').value=tp.notif;
- document.getElementById('mNotif').checked=c.notif;document.getElementById('mAttach').checked=c.attach;
- var st=document.getElementById('mailStatus'),bd=document.getElementById('mailBadge');
- if(gHasMail()){st.innerHTML='<span class="ok">Terhubung sebagai '+esc(gUserEmail||'akun Google')+'. Izin kirim email aktif.</span>';bd.innerHTML='<span class="ok">Siap</span>'}
- else if(gAccessToken){st.innerHTML='<span style="color:#a22d2d">Akun Google terhubung, tetapi izin kirim email belum diberikan. Klik "Hubungkan Akun Google" lagi dan centang izin Gmail.</span>';bd.innerHTML='<span style="color:#a22d2d">Izin kurang</span>'}
- else{st.innerHTML='<span style="color:#a22d2d">Belum terhubung ke Google.</span>';bd.innerHTML='<span style="color:#a22d2d">Belum terhubung</span>'}}
 function etSave(){var s={};try{s=JSON.parse(localStorage.getItem('proc_mailtpl')||'{}')||{}}catch(e){}
  s[etCur]={subject:document.getElementById('etSubject').value,body:document.getElementById('etBody').value,notif:document.getElementById('etNotif').value};
  localStorage.setItem('proc_mailtpl',JSON.stringify(s))}
-function etInput(){etSave()}
+function etInput(){etSave();updatePreview()}
 function etKindChange(){etCur=document.getElementById('etKind').value;renderMail()}
 function etReset(){var s={};try{s=JSON.parse(localStorage.getItem('proc_mailtpl')||'{}')||{}}catch(e){}delete s[etCur];localStorage.setItem('proc_mailtpl',JSON.stringify(s));renderMail();showAlert('Teks dikembalikan ke bawaan.')}
-function mCfgChange(){localStorage.setItem('proc_mailcfg',JSON.stringify({notif:document.getElementById('mNotif').checked,attach:document.getElementById('mAttach').checked}))}
 /* MIME + Gmail API */
 function b64bytes(u8){var s='',CH=0x8000;for(var i=0;i<u8.length;i+=CH)s+=String.fromCharCode.apply(null,u8.subarray(i,i+CH));return btoa(s)}
 function wrap76(b){return b.replace(/.{1,76}/g,'$&\r\n')}
@@ -710,30 +643,6 @@ async function notifyWA(t,v,text,cfg,extra){if(!cfg.notif)return '';
  if(!fOn())return ' (notifikasi WA dilewati: Fonnte belum aktif)';if(!validWA(v.wa))return ' (notifikasi WA dilewati: nomor WA belum valid)';
  try{await fonnteSend(phoneLocal(v.wa),fillTpl(text,t,v,extra));wlog.unshift({no:t.no,v:v.company,wa:v.wa,at:new Date().toLocaleString('id-ID'),via:'Fonnte (notifikasi email)'});save();return ' + notifikasi WhatsApp terkirim'}
  catch(e){return ' (notifikasi WA gagal: '+e.message+')'}}
-async function sendInviteMail(t,v){var tp=mailTpl().inv,cfg=mcfg();
- var att=[];if(cfg.attach)att.push({name:'Undangan_Anwijzing_'+safeName(v.company)+'.docx',mime:DOCX_MIME,bytes:suratDocxBytes(t,v)});
- await gmailSend({to:v.email.trim(),subject:fillTpl(tp.subject,t,v),body:fillTpl(tp.body,t,v),attachments:att});
- var at=new Date().toLocaleString('id-ID');t.emailSent=t.emailSent||{};t.emailSent[v.company]=at;if(!t.sent[v.company])t.sent[v.company]=at;
- wlog.unshift({no:t.no,v:v.company,wa:v.email,at:at,via:'Email (Gmail)'});save();
- return await notifyWA(t,v,tp.notif,cfg)}
-async function sendMail(i){var t=tenders[curT],v=vendors[i];
- if(!validEmail(v.email)){showAlert('Email '+v.company+' belum diisi. Isi lewat tombol Edit di menu Vendor.');return}
- if(needGmail())return;
- showAlert('Mengirim email ke '+v.company+' ...');
- try{var n=await sendInviteMail(t,v);renderDetail();showAlert('Email terkirim ke '+v.email+n)}catch(e){showAlert('Gagal kirim email: '+e.message)}}
-function sendMailAll(){var t=tenders[curT];t.emailSent=t.emailSent||{};
- var list=t.peserta.map(function(n){return vendors.find(function(v){return v.company===n})}).filter(Boolean);
- var ok=list.filter(function(v){return validEmail(v.email)&&!t.emailSent[v.company]}),noMail=list.filter(function(v){return !validEmail(v.email)});
- if(!ok.length){showAlert(noMail.length?'Email vendor belum diisi. Lengkapi lewat tombol Edit di menu Vendor.':'Semua vendor peserta sudah dikirimi email. Pakai "Kirim ulang email" per vendor bila perlu.');return}
- if(needGmail())return;
- var notif=mcfg().notif&&fOn();
- askConfirm('Kirim email undangan (dengan lampiran surat) ke '+ok.length+' vendor'+(noMail.length?' ('+noMail.length+' dilewati: email belum diisi)':'')+(notif?', disertai notifikasi WhatsApp lewat Fonnte':'')+'?',async function(){
-  var done=0,fails=[];
-  for(var k=0;k<ok.length;k++){var v=ok[k];showAlert('Mengirim '+(k+1)+'/'+ok.length+': '+v.company+' ...');
-   try{await sendInviteMail(t,v);done++;if(tenders[curT]===t&&curTab==='undangan')renderDetail()}catch(e){fails.push(v.company+' ('+e.message+')');if(/sesi Google|izin kirim/.test(e.message))break}
-   if(k<ok.length-1)await sleep(notif?3000+Math.random()*3000:1000+Math.random()*1000)}
-  if(tenders[curT]===t)renderDetail();
-  showAlert('Selesai: '+done+' email terkirim'+(fails.length?', '+fails.length+' gagal: '+fails.join('; '):'.'))})}
 async function mailBA(name){var t=tenders[curT],v=vendors.find(function(x){return x.company===name});
  if(!v||!validEmail(v.email)){showAlert('Email '+name+' belum diisi. Isi lewat tombol Edit di menu Vendor.');return}
  if(!baReady(t,name)){showAlert('Isi dulu harga penawaran '+name+' di tab BA Nego.');return}
@@ -910,6 +819,257 @@ function tEvakom(t){if(!t.peserta.length)return '<div class="empty">Pilih vendor
  +'<b style="font-size:13px">Isian khusus Evakom</b><div class="scroll"><table><thead><tr><th>Vendor</th><th>Merk</th><th>Telaah dokumen</th><th>Franco</th></tr></thead><tbody>'+vrows+'</tbody></table></div>'
  +'<div class="form-grid" style="margin-top:10px"><div class="field"><label>TANGGAL EVAKOM</label><input type="date" value="'+esc(e.tgl)+'" onchange="evTgl(this.value)"></div>'+sf('JUDUL KOLOM STANDAR','label')+sf('STANDAR FRANCO','franco')+sf('STANDAR DP','dp')+sf('STANDAR PEMBAYARAN','bayar')+sf('STANDAR DELIVERY','delivery')+sf('STANDAR LAINNYA','lain')+sf('NILAI STANDAR TEKNIS','teknis','number')+'</div></div>'
  +'<div class="pad" style="padding-top:0"><div class="scroll"><table style="min-width:'+(560+d.names.length*220)+'px;border-collapse:collapse"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div><p style="margin:14px 0 0;font-size:13px">'+esc(d.place)+'<br><b>'+esc(d.role)+'</b></p></div>'}
+
+function xg(h,k){return (h&&h.x)?h.x[k]:undefined}
+/* ===== Alur dua tahap, kalender (.ics), pengingat terjadwal ===== */
+var DEF_TPL_KES='Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nDengan hormat, kami dari {kami} mengundang perusahaan Bapak/Ibu untuk berpartisipasi dalam pengadaan *{tender}*.\n\nMohon konfirmasi kesediaan Bapak/Ibu mengikuti pengadaan ini paling lambat {batas_konfirmasi}, dengan membalas pesan ini (Bersedia / Tidak bersedia). Surat undangan resmi kami kirimkan melalui email.\n\nTerima kasih.\n{kami}';
+var tplK=localStorage.getItem('proc_tplkes')||DEF_TPL_KES;
+MAIL_DEF.kes={subject:'Undangan Mengikuti Pengadaan - {tender}',
+ body:'Yth. Bapak/Ibu {pic}\n{perusahaan}\n\nDengan hormat,\n\nTerlampir surat undangan untuk berpartisipasi dalam {tender}. Mohon konfirmasi kesediaan paling lambat {batas_konfirmasi} dengan membalas email ini.\n\nTerima kasih.\n\nHormat kami,\n{ttd}\n{kami}',
+ notif:'Yth. Bapak/Ibu {pic} ({perusahaan}),\n\nKami telah mengirim email undangan pengadaan *{tender}* ke {email}. Mohon cek inbox/spam dan konfirmasi kesediaan paling lambat {batas_konfirmasi}.\n\nTerima kasih.\n{kami}'};
+MAIL_DEF.rem={subject:'',body:'',notif:'Pengingat: *{tender}* akan dimulai {kapan}.\n\nAcara: {acara}\nHari/tanggal: {tanggal}\nJam: {jam} WIB\nTempat: {tempat}\n\nMohon bergabung tepat waktu.\n{kami}'};
+function stg(t){return t.tahap===1?1:2}
+function sentMap(t){if(stg(t)===1){t.sentK=t.sentK||{};return t.sentK}t.sent=t.sent||{};return t.sent}
+function mailMap(t){if(stg(t)===1){t.emailSentK=t.emailSentK||{};return t.emailSentK}t.emailSent=t.emailSent||{};return t.emailSent}
+function kindOf(t){return stg(t)===1?'kes':'inv'}
+function setTahap(v){var t=tenders[curT];t.tahap=parseInt(v,10)===1?1:2;save();renderDetail()}
+function setRsvp(n,v){var t=tenders[curT];t.rsvp=t.rsvp||{};t.rsvp[n]=v;save();renderDetail();
+ if(v==='tidak')askConfirm(n+' tidak bersedia. Keluarkan dari daftar peserta tender ini? (catatan "tidak bersedia" tetap tersimpan)',function(){var k=t.peserta.indexOf(n);if(k>=0)t.peserta.splice(k,1);save();renderDetail();renderTenders()})}
+/* teks dan placeholder */
+function msg(t,v){return fillTpl(stg(t)===1?tplK:tpl,t,v)}
+function mailTpl(){var s={};try{s=JSON.parse(localStorage.getItem('proc_mailtpl')||'{}')||{}}catch(e){}var o={};Object.keys(MAIL_DEF).forEach(function(k){o[k]=Object.assign({},MAIL_DEF[k],s[k]||{})});return o}
+function mcfg(){var c={};try{c=JSON.parse(localStorage.getItem('proc_mailcfg')||'{}')||{}}catch(e){}return {notif:c.notif!==false,attach:c.attach!==false,ics:c.ics!==false}}
+function mCfgChange(){localStorage.setItem('proc_mailcfg',JSON.stringify({notif:document.getElementById('mNotif').checked,attach:document.getElementById('mAttach').checked,ics:document.getElementById('mIcs').checked}))}
+function renderMail(){var kind=document.getElementById('etKind');if(!kind)return;
+ var tp=mailTpl()[etCur],c=mcfg();kind.value=etCur;
+ document.getElementById('etSubject').value=tp.subject;document.getElementById('etBody').value=tp.body;document.getElementById('etNotif').value=tp.notif;
+ var box=document.getElementById('etMailBox');if(box)box.style.display=etCur==='rem'?'none':'';
+ document.getElementById('mNotif').checked=c.notif;document.getElementById('mAttach').checked=c.attach;var ic=document.getElementById('mIcs');if(ic)ic.checked=c.ics;
+ var st=document.getElementById('mailStatus'),bd=document.getElementById('mailBadge');
+ if(gHasMail()){st.innerHTML='<span class="ok">Terhubung sebagai '+esc(gUserEmail||'akun Google')+'. Izin kirim email aktif.</span>';bd.innerHTML='<span class="ok">Siap</span>'}
+ else if(gAccessToken){st.innerHTML='<span style="color:#a22d2d">Akun Google terhubung, tetapi izin kirim email belum diberikan. Klik "Hubungkan Akun Google" lagi dan centang izin Gmail.</span>';bd.innerHTML='<span style="color:#a22d2d">Izin kurang</span>'}
+ else{st.innerHTML='<span style="color:#a22d2d">Belum terhubung ke Google.</span>';bd.innerHTML='<span style="color:#a22d2d">Belum terhubung</span>'}updatePreview()}
+/* surat (docx) tahap 1 dan 2 */
+function suratBuild(t,v,o){var P=DX.p,R=DX.r,A={after:80},x=[];
+ var tglSurat=t.tglSurat?tglIndo(t.tglSurat).split(', ')[1]:new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+ x.push(P('Nomor : '+(o.nomor||'-'),A));x.push(P('Perihal : '+o.perihal,A));x.push(P(''));
+ x.push(P(t.kota+', '+tglSurat,A));x.push(P(''));
+ x.push(P('Kepada Yth,',A));x.push(P([R(v.company,{b:1})],A));x.push(P('di',A));x.push(P('Tempat',A));x.push(P(''));
+ x.push(P('Dengan hormat,',A));x.push(P(''));
+ x.push(P(o.para,{after:80,jc:'both'}));x.push(P(''));
+ o.lines.forEach(function(l){x.push(P(l[0]+'\t: '+l[1],{after:80,tabs:[1900],left:1900,hanging:1900}))});
+ if(o.lines.length)x.push(P(''));
+ x.push(P('Demikian, atas perhatiannya disampaikan terima kasih.',{after:80,jc:'both'}));x.push(P(''));
+ x.push(P(t.companyName,A));x.push(P(''));x.push(P('Hormat kami,',A));x.push(P(''));x.push(P(''));
+ x.push(P([R(t.signerName,{b:1,u:1})],A));x.push(P(t.signerJabatan,A));x.push(P(''));
+ x.push(P(o.note,A));
+ return x.join('')}
+function suratFileName(t,v){return (stg(t)===1?'Undangan_Kesediaan_':'Undangan_Anwijzing_')+safeName(v.company)+'.docx'}
+function dlSurat(i){var t=tenders[curT],v=vendors[i];dlBytes(suratDocxBytes(t,v),suratFileName(t,v))}
+/* kalender .ics */
+function icsEsc(s){return String(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n')}
+function icsStamp(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}
+function icsFold(line){var out=[];while(line.length>72){out.push(line.slice(0,72));line=' '+line.slice(72)}out.push(line);return out.join('\r\n')}
+/* Fonnte (dengan jadwal) */
+async function fonnteSend(target,message,file,fname,schedule){var c=fcfg();var fd=new FormData();fd.append('target',target);fd.append('message',message);fd.append('countryCode','62');
+ if(file){fd.append('file',file,fname);fd.append('filename',fname)}
+ if(schedule)fd.append('schedule',String(schedule));
+ var res;try{res=await fetch('https://api.fonnte.com/send',{method:'POST',headers:{Authorization:c.token},body:fd})}catch(e){throw new Error('tidak bisa terhubung ke Fonnte dari browser (kemungkinan diblokir CORS atau internet terputus)')}
+ var j={};try{j=await res.json()}catch(e){}
+ if(!(j.status===true||j.Status===true))throw new Error(j.reason||j.detail||('HTTP '+res.status));
+ return j}
+/* pengiriman WA & email, sadar tahap */
+function markSent(t,v,via){var at=new Date().toLocaleString('id-ID');sentMap(t)[v.company]=at;wlog.unshift({no:t.no,v:v.company,wa:v.wa,at:at,via:via+(stg(t)===1?' (tahap 1)':'')});save()}
+async function sendInvite(t,v){var text=msg(t,v),c=fcfg(),note='';
+ if(c.attach){try{var blob=new Blob([suratDocxBytes(t,v)],{type:DOCX_MIME});await fonnteSend(phoneLocal(v.wa),text,blob,suratFileName(t,v));markSent(t,v,'Fonnte + lampiran');return 'dengan lampiran surat'}
+  catch(e){if(/tidak bisa terhubung/.test(e.message))throw e;note=' (lampiran gagal: '+e.message+', terkirim tanpa lampiran)'}}
+ await fonnteSend(phoneLocal(v.wa),text);markSent(t,v,'Fonnte');return 'teks'+note}
+function openWaMe(t,v){window.open('https://wa.me/'+phone(v.wa)+'?text='+encodeURIComponent(msg(t,v)),'_blank');markSent(t,v,'WhatsApp biasa');renderDetail()}
+async function sendWA(i){var t=tenders[curT],v=vendors[i];
+ if(!validWA(v.wa)){showAlert('Nomor WhatsApp '+v.company+' belum valid. Lengkapi lewat tombol Edit di menu Vendor.');return}
+ if(fOn()){showAlert('Mengirim ke '+v.company+' ...');
+  try{var r=await sendInvite(t,v);renderDetail();showAlert('Terkirim ke '+(v.pic||v.company)+' ('+r+')')}
+  catch(err){askConfirm('Gagal kirim otomatis: '+err.message+'. Buka WhatsApp biasa sebagai gantinya?',function(){openWaMe(t,v)})}
+  return}
+ openWaMe(t,v)}
+function targetsFor(t){t.rsvp=t.rsvp||{};var list=t.peserta.map(function(n){return vendors.find(function(v){return v.company===n})}).filter(Boolean);
+ return stg(t)===2?list.filter(function(v){return t.rsvp[v.company]==='bersedia'}):list}
+function sendAllWA(){var t=tenders[curT];
+ if(!fOn()){showAlert('Aktifkan Fonnte dulu di menu WhatsApp (isi token lalu Simpan).');return}
+ var sm=sentMap(t),list=targetsFor(t);
+ if(stg(t)===2&&!list.length){showAlert('Belum ada vendor berstatus Bersedia. Tandai dulu di kolom respon.');return}
+ var todo=list.filter(function(v){return !sm[v.company]});
+ var ok=todo.filter(function(v){return validWA(v.wa)}),bad=todo.filter(function(v){return !validWA(v.wa)});
+ if(!ok.length){showAlert(todo.length?'Nomor WhatsApp vendor belum valid. Lengkapi lewat tombol Edit di menu Vendor.':'Semua vendor sasaran sudah menerima pesan. Pakai "Kirim ulang" per vendor bila perlu.');return}
+ askConfirm('Kirim '+(stg(t)===1?'surat kesediaan':'undangan')+' otomatis lewat Fonnte ke '+ok.length+' vendor'+(bad.length?' ('+bad.length+' dilewati: nomor WA belum valid)':'')+'? Pesan dikirim berurutan dengan jeda beberapa detik agar nomor WhatsApp aman.',async function(){
+  var done=0,fails=[];
+  for(var k=0;k<ok.length;k++){var v=ok[k];showAlert('Mengirim '+(k+1)+'/'+ok.length+': '+v.company+' ...');
+   try{await sendInvite(t,v);done++;if(tenders[curT]===t&&curTab==='undangan')renderDetail()}catch(e){fails.push(v.company+' ('+e.message+')')}
+   if(k<ok.length-1)await sleep(4000+Math.random()*4000)}
+  if(tenders[curT]===t)renderDetail();
+  showAlert('Selesai: '+done+' terkirim'+(fails.length?', '+fails.length+' gagal: '+fails.join('; '):'.'))})}
+async function sendInviteMail(t,v){var tp=mailTpl()[kindOf(t)],cfg=mcfg(),att=[];
+ if(cfg.attach)att.push({name:suratFileName(t,v),mime:DOCX_MIME,bytes:suratDocxBytes(t,v)});
+ if(cfg.ics&&stg(t)===2){var ics=icsBytes(t,v);if(ics)att.push({name:'Jadwal_Anwijzing.ics',mime:'text/calendar; charset=UTF-8; method=PUBLISH',bytes:ics})}
+ await gmailSend({to:v.email.trim(),subject:fillTpl(tp.subject,t,v),body:fillTpl(tp.body,t,v),attachments:att});
+ var at=new Date().toLocaleString('id-ID'),sm=sentMap(t);mailMap(t)[v.company]=at;if(!sm[v.company])sm[v.company]=at;
+ wlog.unshift({no:t.no,v:v.company,wa:v.email,at:at,via:'Email (Gmail)'+(stg(t)===1?' (tahap 1)':'')});save();
+ return await notifyWA(t,v,tp.notif,cfg)}
+async function sendMail(i){var t=tenders[curT],v=vendors[i];
+ if(!validEmail(v.email)){showAlert('Email '+v.company+' belum diisi. Isi lewat tombol Edit di menu Vendor.');return}
+ if(needGmail())return;
+ showAlert('Mengirim email ke '+v.company+' ...');
+ try{var n=await sendInviteMail(t,v);renderDetail();showAlert('Email terkirim ke '+v.email+n)}catch(e){showAlert('Gagal kirim email: '+e.message)}}
+function sendMailAll(){var t=tenders[curT],em=mailMap(t),list=targetsFor(t);
+ if(stg(t)===2&&!list.length){showAlert('Belum ada vendor berstatus Bersedia. Tandai dulu di kolom respon.');return}
+ var ok=list.filter(function(v){return validEmail(v.email)&&!em[v.company]}),noMail=list.filter(function(v){return !validEmail(v.email)});
+ if(!ok.length){showAlert(noMail.length?'Email vendor belum diisi. Lengkapi lewat tombol Edit di menu Vendor.':'Semua vendor sasaran sudah dikirimi email. Pakai "Kirim ulang email" per vendor bila perlu.');return}
+ if(needGmail())return;
+ var notif=mcfg().notif&&fOn();
+ askConfirm('Kirim email '+(stg(t)===1?'surat kesediaan':'undangan')+' (dengan lampiran) ke '+ok.length+' vendor'+(noMail.length?' ('+noMail.length+' dilewati: email belum diisi)':'')+(notif?', disertai notifikasi WhatsApp lewat Fonnte':'')+'?',async function(){
+  var done=0,fails=[];
+  for(var k=0;k<ok.length;k++){var v=ok[k];showAlert('Mengirim '+(k+1)+'/'+ok.length+': '+v.company+' ...');
+   try{await sendInviteMail(t,v);done++;if(tenders[curT]===t&&curTab==='undangan')renderDetail()}catch(e){fails.push(v.company+' ('+e.message+')');if(/sesi Google|izin kirim/.test(e.message))break}
+   if(k<ok.length-1)await sleep(notif?3000+Math.random()*3000:1000+Math.random()*1000)}
+  if(tenders[curT]===t)renderDetail();
+  showAlert('Selesai: '+done+' email terkirim'+(fails.length?', '+fails.length+' gagal: '+fails.join('; '):'.'))})}
+/* pengingat terjadwal (Fonnte schedule) */
+function remCfg(){var o={d1:true,h1:true,m15:true};try{Object.assign(o,JSON.parse(localStorage.getItem('proc_remind')||'{}'))}catch(e){}return o}
+function remSet(k,v){var c=remCfg();c[k]=v;localStorage.setItem('proc_remind',JSON.stringify(c))}
+/* tampilan tab Vendor & Undangan */
+
+/* ===== Template pesan: kolom otomatis, tombol sisip, pratinjau ===== */
+function tempatFull(t){return (t.tempat||'').trim()||'-'}
+var lastTplEl=null;
+var PH_LIST=[['Nama PIC','pic'],['Jabatan PIC','jabatan_pic'],['Perusahaan vendor','perusahaan'],['Alamat vendor','alamat'],['Email vendor','email'],['Nama tender','tender'],['No. tender','no'],['Acara','acara'],['Hari','hari'],['Hari, tanggal','tanggal'],['Tanggal (tanpa hari)','tgl'],['Jam','jam'],['Jam mulai saja','jam_mulai'],['Jam selesai','jam_selesai'],['Durasi','durasi'],['Tempat','tempat'],['Batas konfirmasi','batas_konfirmasi'],['Deadline penawaran','deadline'],['Nomor surat','nomor_surat'],['Perusahaan kami','kami'],['Penandatangan','ttd'],['Jabatan penandatangan','jabatan_ttd'],['Kota','kota'],['Harga akhir (BA)','harga'],['Waktu pengingat','kapan']];
+function renderChips(){var html=PH_LIST.map(function(p){return '<button class="btn small" type="button" onmousedown="event.preventDefault()" onclick="insertPh(\''+p[1]+'\')" title="{'+p[1]+'}">'+p[0]+'</button>'}).join(' ');
+ ['phChips','phChips2'].forEach(function(id){var e=document.getElementById(id);if(e)e.innerHTML=html})}
+function bindTplFocus(){['waTpl','waTplK','etSubject','etBody','etNotif'].forEach(function(id){var e=document.getElementById(id);if(e)e.onfocus=function(){lastTplEl=this}})}
+function insertPh(k){var el=lastTplEl;if(!el){showAlert('Klik dulu kotak teks yang ingin diisi, lalu klik tombol kolom otomatis.');return}
+ var v=el.value||'',s=el.selectionStart,e=el.selectionEnd;if(s==null){s=e=v.length}
+ var ins='{'+k+'}';el.value=v.slice(0,s)+ins+v.slice(e);var pos=s+ins.length;
+ try{el.setSelectionRange(pos,pos)}catch(x){}
+ if(el.focus)el.focus();
+ if(el.dispatchEvent&&typeof Event==='function')el.dispatchEvent(new Event('input',{bubbles:true}));else if(el.oninput)el.oninput();
+ updatePreview()}
+function phSample(){var t=tenders[curT]||tenders[0]||null;if(!t)return null;var v=null;
+ if(t.peserta&&t.peserta.length)v=vendors.find(function(x){return x.company===t.peserta[0]});
+ if(!v)v=vendors[0]||{company:'PT Contoh',pic:'Bapak/Ibu Contoh',wa:'',email:'',jabatan:'Direktur',alamat:''};
+ return {t:t,v:v}}
+function updatePreview(){var wp=document.getElementById('waPrev'),ep=document.getElementById('etPrev');if(!wp&&!ep)return;
+ var s=phSample();if(!s){if(wp)wp.textContent='Belum ada tender untuk contoh pratinjau.';if(ep)ep.textContent='Belum ada tender untuk contoh pratinjau.';return}
+ var t=s.t,v=s.v,old=t.tahap;
+ try{
+  if(wp){t.tahap=2;var a=fillTpl(tpl,t,v);t.tahap=1;var b=fillTpl(tplK,t,v);wp.textContent='[Tahap 2 - Anwijzing]\n'+a+'\n\n[Tahap 1 - Kesediaan]\n'+b}
+  if(ep){var tp=mailTpl()[etCur];t.tahap=etCur==='kes'?1:2;var extra=etCur==='ba'?{harga:'Rp 100.000.000,-'}:etCur==='rem'?{kapan:'1 jam lagi'}:null;
+   var txt='';if(etCur!=='rem')txt='Subjek: '+fillTpl(tp.subject,t,v,extra)+'\n\n'+fillTpl(tp.body,t,v,extra)+'\n\n';
+   ep.textContent=txt+'[Notifikasi WhatsApp]\n'+fillTpl(tp.notif,t,v,extra)}
+ }finally{t.tahap=old}}
+function resetWaTpl(n){if(n===2){tpl=DEF_TPL;save();var a=document.getElementById('waTpl');if(a)a.value=tpl}else{tplK=DEF_TPL_KES;localStorage.setItem('proc_tplkes',tplK);var b=document.getElementById('waTplK');if(b)b.value=tplK}
+ updatePreview();showAlert('Template dikembalikan ke teks bawaan.')}
+
+/* ===== Jadwal per vendor + pembuat slot otomatis ===== */
+function sched(t,n){var j=(t.jadwal&&n&&t.jadwal[n])||{};return {tgl:j.tgl||t.tgl||'',jam:j.jam||t.jam||'',dur:parseInt(j.dur,10)||0,custom:!!(j.tgl||j.jam)}}
+function addMin(tgl,jam,min){var b=Date.parse(tgl+'T'+String(jam).replace('.',':').slice(0,5)+':00+07:00');if(isNaN(b))return null;var d=new Date(b+min*60000+7*3600000).toISOString();return {tgl:d.slice(0,10),jam:d.slice(11,16)}}
+function jamEnd(sc){return sc.dur&&sc.tgl&&sc.jam?addMin(sc.tgl,sc.jam,sc.dur):null}
+function jamText(sc){if(!sc.jam)return '-';var e=jamEnd(sc);return e?sc.jam+' - '+e.jam:sc.jam}
+function fillTpl(text,t,v,extra){var sc=sched(t,v.company),en=jamEnd(sc);
+ var m={pic:v.pic||'',perusahaan:v.company,tender:t.name,no:t.no,tanggal:tglIndo(sc.tgl),jam:jamText(sc),jam_mulai:sc.jam||'-',jam_selesai:en?en.jam:'-',tempat:tempatFull(t),deadline:t.deadline,email:v.email||'',kami:t.companyName||'',ttd:t.signerName||'',nomor_surat:(stg(t)===1?t.nomorSuratK:t.nomorSurat)||'-',batas_konfirmasi:t.batasK?tglIndo(t.batasK):(t.deadline||'-'),acara:t.acara||'',hari:sc.tgl?hariOf(sc.tgl):'-',tgl:(tglIndo(sc.tgl).split(', ')[1]||'-'),durasi:((sc.dur||parseInt(t.durasi,10)||120)+' menit'),jabatan_pic:v.jabatan||'',jabatan_ttd:t.signerJabatan||'',kota:t.kota||'',alamat:v.alamat||''};
+ if(extra)for(var k in extra)m[k]=extra[k];
+ return String(text||'').replace(/\{(\w+)\}/g,function(a,k){return m[k]!=null?m[k]:a})}
+function suratDocxBytes(t,v){var o,sc=sched(t,v.company);
+ if(stg(t)===1)o={nomor:t.nomorSuratK,perihal:'Undangan Mengikuti Pengadaan',para:'Sehubungan dengan kebutuhan '+t.name+' di Rumah Sakit Semen Gresik, dengan ini kami mengundang saudara untuk berpartisipasi dalam proses pengadaan tersebut. Mohon konfirmasi kesediaan saudara paling lambat '+(t.batasK?tglIndo(t.batasK):(t.deadline||'-'))+'.',lines:[],note:'Catatan : - Harap konfirmasi kesediaan ke contact person di bawah ini.'};
+ else o={nomor:t.nomorSurat,perihal:t.perihal,para:'Sehubungan dengan kebutuhan '+t.name+' di Rumah Sakit Semen Gresik, dengan ini kami mengundang saudara pada :',lines:[['Hari/ tanggal',tglIndo(sc.tgl)],['Jam',jamText(sc)+' WIB'],['Tempat',tempatFull(t)],['Acara',t.acara]],note:'Catatan : - Harap konfirmasi kedatangan ke contact person di bawah ini.'};
+ return DX.build(suratBuild(t,v,o),{font:'Times New Roman',sz:24,footer:false,margin:{top:1134,right:1134,bottom:1134,left:1418}})}
+function eventStart(t,n){var sc=sched(t,n);if(!sc.tgl||!sc.jam)return null;var d=new Date(sc.tgl+'T'+String(sc.jam).replace('.',':').slice(0,5)+':00+07:00');return isNaN(d.getTime())?null:d}
+function icsBytes(t,v){var s=eventStart(t,v.company);if(!s)return null;var dur=sched(t,v.company).dur||parseInt(t.durasi,10)||120,e=new Date(s.getTime()+dur*60000);
+ var loc=(t.tempat||'');var desc=fillTpl('{tender}\n{tempat}',t,v);
+ var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Dashboard Pengadaan//ID','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT','UID:'+Date.now().toString(36)+Math.random().toString(36).slice(2)+'@dashboard-pengadaan','DTSTAMP:'+icsStamp(new Date()),'DTSTART:'+icsStamp(s),'DTEND:'+icsStamp(e),'SUMMARY:'+icsEsc((t.acara||'Anwijzing')+' - '+t.name),'LOCATION:'+icsEsc(loc),'DESCRIPTION:'+icsEsc(desc),'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:Pengingat besok','END:VALARM','BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:Pengingat 15 menit','END:VALARM','END:VEVENT','END:VCALENDAR'];
+ return new TextEncoder().encode(L.map(icsFold).join('\r\n')+'\r\n')}
+function remPlan(t,n){var s=eventStart(t,n);if(!s)return [];var sc=sched(t,n),c=remCfg(),now=Date.now()/1000+90,out=[];
+ if(c.d1){var d=new Date(new Date(sc.tgl+'T09:00:00+07:00').getTime()-86400000);out.push({key:'d1',label:'besok',ts:Math.floor(d.getTime()/1000)})}
+ if(c.h1)out.push({key:'h1',label:'1 jam lagi',ts:Math.floor(s.getTime()/1000)-3600});
+ if(c.m15)out.push({key:'m15',label:'15 menit lagi',ts:Math.floor(s.getTime()/1000)-900});
+ return out.filter(function(p){return p.ts>now})}
+function jadwalkanPengingat(){var t=tenders[curT];
+ if(!fOn()){showAlert('Aktifkan Fonnte dulu di menu WhatsApp & Email Center.');return}
+ t.rsvp=t.rsvp||{};
+ var list=t.peserta.map(function(n){return vendors.find(function(v){return v.company===n})}).filter(Boolean);
+ var willing=list.filter(function(v){return t.rsvp[v.company]==='bersedia'}),targets=willing.length?willing:list;
+ var ok=targets.filter(function(v){return validWA(v.wa)});
+ if(!ok.length){showAlert('Tidak ada vendor dengan nomor WhatsApp valid.');return}
+ var noSched=ok.filter(function(v){return !eventStart(t,v.company)});
+ if(noSched.length===ok.length){showAlert('Isi tanggal dan jam acara di tab Detail, atau atur jadwal per vendor.');return}
+ var tasks=[];ok.forEach(function(v){remPlan(t,v.company).forEach(function(p){tasks.push({v:v,p:p})})});
+ if(!tasks.length){showAlert('Semua waktu pengingat sudah lewat atau belum ada yang dipilih.');return}
+ var nv=ok.length-noSched.length;
+ askConfirm('Jadwalkan '+tasks.length+' pesan pengingat WhatsApp untuk '+nv+' vendor'+(willing.length?' (yang Bersedia)':' (belum ada yang berstatus Bersedia, semua peserta dipilih)')+(noSched.length?'; '+noSched.length+' vendor dilewati karena belum punya jadwal':'')+'. Semuanya memakai kuota Fonnte.'+(t.rem?' Pengingat sebelumnya sudah pernah dijadwalkan; menjadwalkan lagi membuat pesan ganda.':''),async function(){
+  var done=0,fails=[],tp=mailTpl().rem.notif,stop=false;
+  for(var i=0;i<tasks.length&&!stop;i++){var k=tasks[i];
+   try{await fonnteSend(phoneLocal(k.v.wa),fillTpl(tp,t,k.v,{kapan:k.p.label}),null,null,k.p.ts);done++}
+   catch(e){fails.push(k.v.company+' ('+e.message+')');if(/quota|token|terhubung/i.test(e.message))stop=true}
+   await sleep(700)}
+  if(done){t.rem={at:new Date().toLocaleString('id-ID'),n:done,jenis:tasks.length};var at=new Date().toLocaleString('id-ID');ok.forEach(function(v){wlog.unshift({no:t.no,v:v.company,wa:v.wa,at:at,via:'Fonnte (pengingat terjadwal)'})});save()}
+  renderDetail();
+  showAlert(done+' pesan pengingat dijadwalkan'+(fails.length?', '+fails.length+' gagal: '+fails.slice(0,3).join('; '):'.'))})}
+/* panel jadwal per vendor */
+function jadwalTargets(t){t.rsvp=t.rsvp||{};var list=t.peserta.map(function(n){return vendors.find(function(v){return v.company===n})}).filter(Boolean);
+ var w=list.filter(function(v){return t.rsvp[v.company]==='bersedia'});return w.length?w:list}
+function jadwalRows(t){var tg=jadwalTargets(t);return tg.map(function(v,i){var sc=sched(t,v.company);return {v:v,i:i,key:(sc.tgl&&sc.jam)?sc.tgl+'T'+sc.jam:'~'}}).sort(function(a,b){return a.key<b.key?-1:a.key>b.key?1:a.i-b.i}).map(function(r){return r.v})}
+function jadwalSet(n,k,v){var t=tenders[curT];t.jadwal=t.jadwal||{};var j=t.jadwal[n]||(t.jadwal[n]={});j[k]=v;if(!j.tgl&&!j.jam)delete t.jadwal[n];save();renderDetail()}
+function slotSet(k,v){var t=tenders[curT];t.slot=t.slot||{};t.slot[k]=(k==='dur'||k==='gap')?(parseInt(v,10)||0):v;save()}
+function jadwalMove(i,dir){var t=tenders[curT],rows=jadwalRows(t),a=rows[i],b=rows[i+dir];if(!a||!b)return;
+ var sa=sched(t,a.company),sb=sched(t,b.company);t.jadwal=t.jadwal||{};
+ t.jadwal[a.company]={tgl:sb.tgl,jam:sb.jam,dur:sb.dur};t.jadwal[b.company]={tgl:sa.tgl,jam:sa.jam,dur:sa.dur};save();renderDetail()}
+function jadwalReset(){askConfirm('Hapus semua jadwal khusus vendor? Semua vendor kembali memakai jadwal tender.',function(){var t=tenders[curT];t.jadwal={};if(t.slot)t.slot.undian=null;save();renderDetail()})}
+function buatJadwal(){var t=tenders[curT],sl=t.slot=t.slot||{tgl:'',jam:'',dur:60,gap:15,order:'daftar'},tg=jadwalTargets(t);
+ var tgl=sl.tgl||t.tgl,jam=sl.jam||t.jam||'09:00';
+ if(!tg.length){showAlert('Belum ada vendor peserta.');return}
+ if(!tgl){showAlert('Isi tanggal mulai dulu.');return}
+ var dur=parseInt(sl.dur,10)||60,gap=Math.max(0,parseInt(sl.gap,10)||0);
+ var run=function(){var names=tg.map(function(v){return v.company});
+  if(sl.order==='acak'){for(var i=names.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),x=names[i];names[i]=names[j];names[j]=x}sl.undian={at:new Date().toLocaleString('id-ID'),urutan:names.slice()}}else sl.undian=null;
+  t.jadwal=t.jadwal||{};names.forEach(function(n,i){var s=addMin(tgl,jam,i*(dur+gap));t.jadwal[n]={tgl:s.tgl,jam:s.jam,dur:dur}});
+  save();renderDetail();showAlert('Jadwal dibuat untuk '+names.length+' vendor.')};
+ if(tg.some(function(v){return t.jadwal&&t.jadwal[v.company]}))askConfirm('Jadwal khusus yang sudah ada akan diganti. Lanjutkan?',run);else run()}
+function jadwalPanel(t){var sl=t.slot||{},rows=jadwalRows(t),gf=function(l,type,val,k,extra){return '<div class="field"><label>'+l+'</label><input type="'+type+'" '+(extra||'')+' value="'+esc(val)+'" onchange="slotSet(\''+k+'\',this.value)"></div>'};
+ var body=rows.map(function(v,i){var n=v.company,a=attrSafe(n),sc=sched(t,n),e=jamEnd(sc);
+  return '<tr><td>'+(i+1)+'</td><td>'+esc(n)+'</td><td><input class="inp" type="date" value="'+esc(sc.tgl)+'" onchange="jadwalSet(\''+a+'\',\'tgl\',this.value)"></td><td><input class="inp" type="time" value="'+esc(sc.jam)+'" onchange="jadwalSet(\''+a+'\',\'jam\',this.value)"></td><td>'+(e?esc(e.jam):'-')+'</td><td>'+(sc.custom?'<span class="ok">khusus</span>':'<small>ikut tender</small>')+'</td><td style="white-space:nowrap"><button class="btn small" '+(i?'':'disabled')+' onclick="jadwalMove('+i+',-1)">\u2191</button> <button class="btn small" '+(i<rows.length-1?'':'disabled')+' onclick="jadwalMove('+i+',1)">\u2193</button></td></tr>'}).join('');
+ var und=sl.undian?'<p style="font-size:12px;color:#087a50;margin:8px 0 0">Urutan diundi pada '+esc(sl.undian.at)+': '+sl.undian.urutan.map(function(n,i){return (i+1)+'. '+esc(n)}).join(' \u00b7 ')+'</p>':'';
+ return '<div class="panel-head" style="border-top:1px solid var(--line)"><h3>Jadwal per vendor</h3><span>Tiap vendor hanya menerima jadwalnya sendiri</span></div><div class="pad">'
+ +'<div class="form-grid">'+gf('TANGGAL MULAI','date',sl.tgl||t.tgl||'','tgl')+gf('JAM MULAI','time',sl.jam||t.jam||'09:00','jam')+gf('DURASI PER VENDOR (MENIT)','number',sl.dur||60,'dur','min="5"')+gf('JEDA ANTAR VENDOR (MENIT)','number',sl.gap==null?15:sl.gap,'gap','min="0"')
+ +'<div class="field"><label>URUTAN</label><select onchange="slotSet(\'order\',this.value)"><option value="daftar"'+(sl.order==='acak'?'':' selected')+'>Sesuai urutan daftar peserta</option><option value="acak"'+(sl.order==='acak'?' selected':'')+'>Acak (undian)</option></select></div></div>'
+ +'<div style="margin:10px 0;display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" onclick="buatJadwal()">Buat jadwal otomatis</button><button class="btn del" onclick="jadwalReset()">Hapus jadwal khusus</button></div>'+und
+ +(rows.length?'<div class="scroll" style="margin-top:10px"><table><thead><tr><th>No</th><th>Vendor</th><th>Tanggal</th><th>Jam</th><th>Selesai</th><th>Sumber</th><th>Geser</th></tr></thead><tbody>'+body+'</tbody></table></div>':'<p style="font-size:12px;color:#718096">Pilih vendor peserta dulu.</p>')
+ +'<p style="font-size:12px;color:#718096;margin:8px 0 0">Jadwal dibuat untuk vendor yang berstatus Bersedia (bila belum ada yang ditandai, semua peserta). Waktu tiap vendor bisa diubah manual, dan tombol panah menukar jadwal dengan vendor di atas/bawahnya. Surat, WhatsApp, email, undangan kalender, dan pengingat otomatis memakai jadwal masing-masing vendor.</p></div>'}
+/* tampilan tab Vendor & Undangan */
+function tInv(t){if(!vendors.length)return '<div class="empty">Belum ada vendor. Tambahkan di menu Vendor.</div>';
+ var st=stg(t),sm=sentMap(t),em=mailMap(t);t.rsvp=t.rsvp||{};
+ var hint=st===1?'Tahap 1: kirim surat undangan untuk menanyakan kesediaan, lalu catat jawaban vendor di kolom respon.':'Tahap 2: kirim undangan Anwijzing/presentasi. Pengiriman massal hanya ke vendor berstatus Bersedia.';
+ var top='<div class="pad" style="padding-bottom:0"><div class="form-grid"><div class="field"><label>TAHAP UNDANGAN</label><select onchange="setTahap(this.value)"><option value="1"'+(st===1?' selected':'')+'>Tahap 1 - Konfirmasi kesediaan</option><option value="2"'+(st===2?' selected':'')+'>Tahap 2 - Anwijzing / presentasi</option></select></div></div><p style="font-size:12px;color:#718096;margin:0">'+hint+'</p></div>';
+ var bulk=t.peserta.length?'<button class="btn small" onclick="sendMailAll()">Kirim email + notifikasi WA ke semua</button> ':'';
+ if(fOn()&&t.peserta.length)bulk+='<button class="btn small wa" onclick="sendAllWA()">Kirim WA ke semua</button>';
+ var head='<div class="panel-head"><h3>Pilih vendor peserta</h3><span>'+t.peserta.length+' dipilih '+bulk+'</span></div>';
+ var rows=vendors.map(function(v,i){var on=t.peserta.indexOf(v.company)>=0,a=attrSafe(v.company);
+  var sub=esc(v.pic)+' \u00b7 '+esc(v.wa)+' \u00b7 '+esc(v.email||'email belum diisi')+(em[v.company]?' \u00b7 email terkirim '+esc(em[v.company]):'');var act='',jd='';
+  if(on){var rs=t.rsvp[v.company]||'belum';
+   if(st===2){var sc=sched(t,v.company);jd='<small>Jadwal: '+esc(tglIndo(sc.tgl))+' \u00b7 '+esc(jamText(sc))+' WIB '+(sc.custom?'(khusus vendor ini)':'(jadwal tender)')+'</small>'}
+   act='<select onchange="setRsvp(\''+a+'\',this.value)" title="Respon vendor"><option value="belum"'+(rs==='belum'?' selected':'')+'>Belum respon</option><option value="bersedia"'+(rs==='bersedia'?' selected':'')+'>Bersedia</option><option value="tidak"'+(rs==='tidak'?' selected':'')+'>Tidak bersedia</option></select>'
+   +(sm[v.company]?'<span class="ok">Terkirim '+esc(sm[v.company])+'</span>':'')
+   +'<button class="btn small" onclick="dlSurat('+i+')">'+(st===1?'Surat Kesediaan (.docx)':'Surat Undangan (.docx)')+'</button>'
+   +'<button class="btn small" onclick="sendMail('+i+')">'+(em[v.company]?'Kirim ulang email':'Kirim Email')+'</button>'
+   +'<button class="btn small wa" onclick="sendWA('+i+')">'+(sm[v.company]?'Kirim ulang':'Kirim WhatsApp')+'</button>'}
+  return '<div class="vr"><input type="checkbox" '+(on?'checked':'')+' onchange="togglePeserta('+i+')" aria-label="Pilih '+esc(v.company)+'"><div class="i"><b>'+esc(v.company)+'</b><small>'+sub+'</small>'+jd+'</div>'+act+'</div>'}).join('');
+ var tolak=Object.keys(t.rsvp).filter(function(n){return t.rsvp[n]==='tidak'&&t.peserta.indexOf(n)<0});
+ var tolakHtml=tolak.length?'<div class="pad"><small style="color:#a22d2d">Tidak bersedia: '+tolak.map(esc).join(', ')+'</small></div>':'';
+ var rc=remCfg(),rem='',jp='';
+ if(st===2){jp=jadwalPanel(t);rem='<div class="panel-head" style="border-top:1px solid var(--line)"><h3>Pengingat jadwal (WhatsApp via Fonnte)</h3><span>'+(t.rem?'<span class="ok">Terjadwal '+esc(t.rem.at)+' ('+t.rem.n+' pesan)</span>':'')+'</span></div><div class="pad"><div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px">'
+  +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" style="width:auto" '+(rc.d1?'checked':'')+' onchange="remSet(\'d1\',this.checked)"> H-1 pukul 09.00 WIB</label>'
+  +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" style="width:auto" '+(rc.h1?'checked':'')+' onchange="remSet(\'h1\',this.checked)"> 1 jam sebelum</label>'
+  +'<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" style="width:auto" '+(rc.m15?'checked':'')+' onchange="remSet(\'m15\',this.checked)"> 15 menit sebelum</label></div>'
+  +'<div style="margin-top:10px"><button class="btn primary" onclick="jadwalkanPengingat()">Jadwalkan pengingat</button></div>'
+  +'<p style="font-size:12px;color:#718096;margin:8px 0 0">Pesan dijadwalkan di server Fonnte, jadi tetap terkirim walau dashboard ditutup. Waktu pengingat dihitung dari jadwal masing-masing vendor. Bila jadwal berubah, hapus pesan terjadwal lama di dashboard Fonnte agar tidak ganda.</p></div>'}
+ return top+head+rows+tolakHtml+jp+rem+'<div class="pad"><small style="color:#718096">Surat otomatis terisi nomor surat, tanggal, acara, dan nama vendor. Email tahap 2 ikut membawa undangan kalender (.ics) berisi jadwal dan tempat, sehingga muncul di kalender vendor dengan pengingat.</small></div>'}
 
 renderTenders();renderVendors();renderWA();
 </script>
